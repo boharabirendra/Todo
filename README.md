@@ -28,12 +28,6 @@
     cd Todo
     npm install
 
-
-    # Add in package.json file
-    "scripts": {
-        "start": "nodemon ./src/index.ts",
-    }
-
     # Add in .env file
     PORT=3000
 
