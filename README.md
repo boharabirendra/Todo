@@ -1,34 +1,52 @@
-# NODE.JS Assignment (Todo App)
-## API ONLY
+# NODE.JS Assignment (Todo App) (API ONLY)
 
-### Steps to locally setup
+## Steps to locally setup
 
-- Install node.js version 18 or above on your system
+### Install
+- Install Node.js version 18 or above on your system, here is the link:
+[Node.js](https://nodejs.org/en)
+
+
+   
 
 ```sh
-1) git clone git@github.com:boharabirendra/Todo.git
-2) cd Todo
-3) npm install
+   
+    git clone git@github.com:boharabirendra/Todo.git
+    cd Todo
+    npm install
+
+
+    # Add in package.json file
+    "scripts": {
+        "start": "nodemon ./src/index.ts",
+    }
+
+    # Add in .env file
+    PORT=3000
+
+    # Finally in terminal run
+    npm run start
+
 ```
-- In .env file assign PORT=3000
+
 
 
 # API routes/paths
 
-## To see all todos 
+### To see all todos 
 - http://localhost:3000/todos (GET request)
 
-## To see todo by id
+### To see todo by id
 - http://localhost:3000/todos/id (GET request)
 
-## To delete todo by id
+### To delete todo by id
 - http://localhost:3000/todos/id (DELETE request)
 
-## To mark todo as done
-- http://localhost:3000/todo/finish/id (PUT request)
+### To mark todo as done
+- http://localhost:3000/todos/finish/id (PUT request)
 
-## To add todo
-- http://localhost:3000/todo (POST request)
+### To add todo
+- http://localhost:3000/todos (POST request)
 
 ```sh
     {
@@ -37,17 +55,18 @@
     }
 ```
 
-## To update todo
-- http://localhost:3000/todos/id (PUT request)
+### To update todo
+- http://localhost:3000/todos (PUT request)
 ```sh
     {
+        "id":"exist id",
         "title" : "new title name",
         "description" : "new description text"
     }
 ```
 
-## To see finished todos
+### To see finished todos
 - http://localhost:3000/finished (GET request)
 
-## To see remaining todos
+### To see remaining todos
 - http://localhost:3000/remaining (GET request)
