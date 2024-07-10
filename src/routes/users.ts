@@ -5,8 +5,8 @@ import { auth } from "../middleware/auth";
 const router = express();
 
 router.post("/signup", UserController.signup);
-router.get("/todos", UserController.fetchTodos);
+router.get("/todos", auth, UserController.fetchTodos);
 router.get("/", auth, UserController.getUsers);
-router.delete("/:id", auth, UserController.deleteUserById)
+router.delete("/:id", auth, UserController.deleteUserById);
 
 export default router;
