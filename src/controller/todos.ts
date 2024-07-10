@@ -32,11 +32,4 @@ export function deleteTodoById(req: Request, res: Response) {
   res.json({ message });
 }
 
-export function updateTodo(req: Request, res: Response) {
-  // const { body } = req;
-  // const message = TodoService.updateTodo(body.id, {
-  //   title: body.title,
-  //   description: body.description,
-  // });
-  // res.json({ message });
-}
+

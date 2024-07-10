@@ -26,4 +26,8 @@ export function deleteUserById(req: Request, res: Response) {
   });
 }
 
-
+export function fetchTodos(req: Request, res: Response) {
+  const { userId } = req.body;
+  const todos = UserService.fetchTodos(userId);
+  res.json({ todos });
+}

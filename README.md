@@ -2,21 +2,13 @@
 
 
 
-## Steps to locally setup
-
-
-
-### Install (Without using docker)
-- Install Node.js version 18 or above on your system, here is the link:
-[Node.js](https://nodejs.org/en)
-
-
-   
+## Steps to locally setup  
 
 ```sh
    
     git clone git@github.com:boharabirendra/Todo.git
     cd Todo
+    git checkout assignment/todo-user
     npm install
 
     # Add in .env file
@@ -31,40 +23,63 @@
 
 # API routes/paths
 
-### To see all todos 
-- http://localhost:3000/todos (GET request)
-
-### To see todo by id
-- http://localhost:3000/todos/id (GET request)
-
-### To delete todo by id
-- http://localhost:3000/todos/id (DELETE request)
-
-### To mark todo as done
-- http://localhost:3000/todos/finish/id (PUT request)
-
-### To add todo
-- http://localhost:3000/todos (POST request)
-
+## To add user
 ```sh
-    {
-        "title" : "title name",
-        "description" : "description text"
+    http://localhost:3000/users/signup (POST request)
+
+    {   
+        "name": "Hari Bohara",
+        "email": "birendrabohara274@gmail.com",
+        "password" : "kanchanpur1230"
     }
 ```
 
-### To update todo
-- http://localhost:3000/todos (PUT request)
+## To login
+
 ```sh
-    {
-        "id":"exist id",
-        "title" : "new title name",
-        "description" : "new description text"
+    http://localhost:3000/auth/login (POST request)
+
+     {   
+        "email": "birendrabohara274@gmail.com",
+        "password" : "kanchanpur1230"
+    }
+
+```
+
+## To see users
+
+```sh
+
+    http://localhost:3000/users (GET request)
+
+```
+
+## To see users todos
+
+```sh
+    http://localhost:3000/users/todos (GET request)
+```
+
+
+## To delete user by id
+
+```sh
+    http://localhost:3000/users/id (DELETE request)
+```
+
+## To add todo
+
+```sh
+    http://localhost:3000/todos
+
+    {   
+        "title": "birendrabohara274@gmail.com",
+        "description" : "kanchanpur1230"
     }
 ```
 
-### To see finished todos
-- http://localhost:3000/finished (GET request)
+## To refresh tokens
 
-### To see remaining todos
-- http://localhost:3000/remaining (GET request)
+```sh
+    http://localhost:3000/refresh (GET request)
+```
