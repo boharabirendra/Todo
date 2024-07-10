@@ -1,5 +1,5 @@
 import { ITodo } from "../interface/todo";
-import * as TodoModel from "../model/todo"
+import * as TodoModel from "../model/todos"
 export function fetchTodos(){
     const todos = TodoModel.fetchTodos();
     return todos;
@@ -16,7 +16,7 @@ export function fetchTodoById(id: string){
 }
 
 
-export function addTodo(todo: ITodo){
+export function addTodo(todo: Pick<ITodo, "userId" | "title" | "description" >){
     const message = TodoModel.addTodo(todo);
     return message;
 }
