@@ -1,19 +1,10 @@
-# NODE.JS Assignment 1 (Todo App) (API ONLY)
+# NODE.JS Assignment 2 (Todo App With User) 
 
 
 
 ## Steps to locally setup
 
-## Using docker
 
-```sh
-    # Pull the Docker image
-    docker pull bohara1230/todo-app:latest
-
-    # Run the Docker container
-    docker run -p 3000:3000 bohara1230/todo-app:latest
-
-```
 
 ### Install (Without using docker)
 - Install Node.js version 18 or above on your system, here is the link:
