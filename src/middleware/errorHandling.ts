@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import HttpStatusCodes from "http-status-codes";
 import {
+  BadRequestError,
   ConflictError,
   ForbiddenError,
   NotFoundError,
@@ -36,6 +37,11 @@ export function genericErrorHandler(
   }
   if (error instanceof NotFoundError) {
     return res.status(HttpStatusCodes.NOT_FOUND).json({
+      message: error.message,
+    });
+  }
+  if (error instanceof BadRequestError) {
+    return res.status(HttpStatusCodes.BAD_REQUEST).json({
       message: error.message,
     });
   }

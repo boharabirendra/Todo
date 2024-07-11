@@ -28,3 +28,9 @@ export class ConflictError extends BaseError {
       super(message);
     }
 }
+
+export class BadRequestError extends BaseError {
+    constructor(message = "BadRequest") {
+      super(message);
+    }
+}
