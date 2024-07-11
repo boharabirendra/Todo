@@ -9,6 +9,7 @@ const config = {
     accessTokenExpiryMS: 30000,
     refereshTokenExpiryMS: 300000,
   },
+  email: process.env.ADMIN_EMAIL
 };
 
 export default config;

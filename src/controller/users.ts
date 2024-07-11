@@ -1,33 +1,75 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import HttpStatusCode from "http-status-codes";
 import { IUser } from "../interface/user";
 import * as UserService from "../service/users";
 
+/**Add user */
 export async function signup(
-  req: Request<any, any, Pick<IUser, "email" | "name" | "password">>,
-  res: Response
+  req: Request<any, any, Pick<IUser, "email" | "name" | "password" | "role">>,
+  res: Response,
+  next: NextFunction
 ) {
-  const user: Pick<IUser, "name" | "email" | "password"> = req.body;
-  const result = await UserService.signup(user);
-  res.json({ result });
+  try {
+    const user = req.body;
+    const result = await UserService.signup(user);
+    res.status(HttpStatusCode.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
 }
 
-export function getUsers(req: Request, res: Response) {
-  const users = UserService.getUsers();
-  return users.length
-    ? res.json(users)
-    : res.json({ message: "No users found." });
+export function getUsers(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { role } = req.body;
+    const users = UserService.getUsers(role);
+    return users.length
+      ? res.status(HttpStatusCode.OK).json(users)
+      : res.status(HttpStatusCode.OK).json({ message: "No users found." });
+  } catch (error) {
+    next(error);
+  }
 }
 
-export function deleteUserById(req: Request, res: Response) {
-  const { id } = req.params;
-  const result = UserService.deleteUserById(id);
-  res.json({
-    result,
-  });
+export function fetchUserById(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+    const user = UserService.fetchUserById(id, role);
+    res.status(HttpStatusCode.OK).json(user);
+  } catch (error) {
+    next(error);
+  }
 }
 
-export function fetchTodos(req: Request, res: Response) {
-  const { userId } = req.body;
-  const todos = UserService.fetchTodos(userId);
-  res.json({ todos });
+export async function updateUser(
+  req: Request<any, any, IUser>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const user = req.body;
+    const { id } = req.params;
+    const result = await UserService.updateUser(id, user);
+    res.status(HttpStatusCode.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
 }
+
+export function deleteUserById(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+    const result = UserService.deleteUserById(id, role);
+    res.status(HttpStatusCode.OK).json({
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+

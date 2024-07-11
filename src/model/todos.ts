@@ -1,12 +1,28 @@
 import { todos } from "../data/todos";
 import { ITodo } from "../interface/todo";
+import { ROLES } from "../utils/enum";
 
-export function fetchTodos() {
-  return todos;
+export function fetchTodos(userId: string, role: ROLES) {
+  if (ROLES.ADMIN === role) return todos;
+  const usersTodos = todos.filter((todo) => todo.userId === userId);
+  return usersTodos;
 }
 
-export function fetchTodoById(id: string) {
-  const todo = todos.find((todo) => todo.id === id);
+export function fetchFinishedTask(userId: string) {
+  const finishedTask = todos.filter((todo) => {
+    if (todo.completed && todo.userId === userId) return todo;
+  });
+  return finishedTask;
+}
+
+export function fetchTodoById(todoId: string, role: ROLES, userId: string) {
+  if (role === ROLES.ADMIN) {
+    const todo = todos.find((todo) => todo.id === todoId);
+    return todo;
+  }
+  const todo = todos.find((todo) => {
+    return todo.id === todoId && todo.userId === userId;
+  });
   return todo;
 }
 
@@ -41,29 +57,19 @@ export function deleteTodoById(id: string) {
 }
 
 export function updateTodo(id: string, todo: ITodo) {
-  const index = todos.findIndex((todo) => todo.id === id);
-  if (index !== -1) {
-    todos[index].title = todo.title;
-    todos[index].description = todo.description;
-    todos[index].updated_at = new Date();
-    return {
-      message: `Todo with id ${id} is updated.`,
-    };
-  }
+  const todoId = Number(id);
+  todos[todoId].title = todo.title;
+  todos[todoId].description = todo.description;
+  todos[todoId].updated_at = new Date();
   return {
-    message: `Fail to update todo with id ${id}.`,
+    message: `Todo with id ${id} is updated.`,
   };
 }
 
 export function finishTask(id: string) {
-  const index = todos.findIndex((todo) => todo.id === id);
-  if (index !== -1) {
-    todos[index].completed = true;
-    return {
-      message: `Todo with id ${id} is marked as done.`,
-    };
-  }
+  const index = Number(id);
+  todos[index].completed = true;
   return {
-    message: `Fail to marked as done`,
+    message: `Todo with id ${id} is mark as done`,
   };
 }

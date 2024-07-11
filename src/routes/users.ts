@@ -4,9 +4,10 @@ import { auth } from "../middleware/auth";
 
 const router = express();
 
-router.post("/signup", UserController.signup);
-router.get("/todos", auth, UserController.fetchTodos);
+router.post("/signup", auth, UserController.signup);
 router.get("/", auth, UserController.getUsers);
+router.get("/:id", auth, UserController.fetchUserById);
+router.put("/:id", auth, UserController.updateUser);
 router.delete("/:id", auth, UserController.deleteUserById);
 
 export default router;
