@@ -43,8 +43,10 @@ export function addTodo(todo: Pick<ITodo, "userId" | "title" | "description">) {
   };
 }
 
-export function deleteTodoById(id: string) {
-  const index = todos.findIndex((todo) => todo.id === id);
+export function deleteTodoById(id: string, userId: string) {
+  const index = todos.findIndex(
+    (todo) => todo.id === id && todo.userId === userId
+  );
   if (index !== -1) {
     todos.splice(index, 1);
     return {

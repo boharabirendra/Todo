@@ -44,7 +44,8 @@ export function deleteTodoById(
 ) {
   try {
     const { id } = req.params;
-    const message = TodoService.deleteTodoById(id);
+    const {userId} = req.body;
+    const message = TodoService.deleteTodoById(id, userId);
     res.status(HttpStatusCode.OK).json({ message });
   } catch (error) {
     next(error);

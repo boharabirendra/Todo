@@ -22,14 +22,15 @@ export function addTodo(todo: Pick<ITodo, "userId" | "title" | "description" >){
     return message;
 }
 
-export function deleteTodoById(id: string){
-    const todo = todos.find(todo => todo.id === id);
+export function deleteTodoById(id: string, userId: string){
+    const todo = todos.find(todo => todo.id === id && todo.userId === userId);
     if(!todo) throw new NotFoundError(`Todo with id ${id} does not exist`);
-    return TodoModel.deleteTodoById(id);
+    return TodoModel.deleteTodoById(id, userId);
 }
 
 export function updateTodo(id: string, todo: ITodo){
-    const existingTodo = todos.find(todo => todo.id === id);
+    const {userId} = todo;
+    const existingTodo = todos.find(todo => todo.id === id && todo.userId === userId);
     if(!existingTodo) throw new NotFoundError(`Todo with id ${id} does not exist`);
     return TodoModel.updateTodo(id, todo);
 }

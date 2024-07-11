@@ -2,10 +2,11 @@ import express from "express";
 import config from "./config";
 import router from "./routes";
 import { genericErrorHandler, notFoundError } from "./middleware/errorHandling";
+import { requestLogger } from "./middleware/logger";
 
 const app = express();
 app.use(express.json());
-
+app.use(requestLogger);
 app.use(router);
 app.use(genericErrorHandler);
 app.use(notFoundError);
