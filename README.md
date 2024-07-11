@@ -1,4 +1,4 @@
-# NODE.JS Assignment 3 (Todo App With User)
+# NODE.JS Assignment 3 (Todo App With User & Admin User)
 
 ## Steps to locally setup
 
