@@ -2,6 +2,9 @@ import express, { NextFunction, Request, Response } from "express";
 import HttpStatusCode from "http-status-codes";
 import * as TodoService from "../service/todos";
 import { ITodo } from "../interface/todo";
+import loggerWithNameSpace from "../utils/logger";
+
+const logger = loggerWithNameSpace("TodoController");
 
 export function fetchTodos(req: Request, res: Response, next: NextFunction) {
   try {
@@ -33,6 +36,7 @@ export function addTodo(
   res: Response
 ) {
   const todo = req.body;
+  logger.info("Called addTodo");
   const message = TodoService.addTodo(todo);
   res.status(HttpStatusCode.OK).json(message);
 }
@@ -45,6 +49,7 @@ export function deleteTodoById(
   try {
     const { id } = req.params;
     const {userId} = req.body;
+    logger.info("Called deleteTodoById");
     const message = TodoService.deleteTodoById(id, userId);
     res.status(HttpStatusCode.OK).json({ message });
   } catch (error) {
@@ -56,6 +61,7 @@ export function updateTodo(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
     const { body } = req;
+    logger.info("Called updateTodo");
     const result = TodoService.updateTodo(id, body);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {

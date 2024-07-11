@@ -2,6 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import HttpStatusCode from "http-status-codes";
 import { IUser } from "../interface/user";
 import * as UserService from "../service/users";
+import loggerWithNameSpace from "../utils/logger";
+
+
+const logger = loggerWithNameSpace("UserController");
 
 /**Add user */
 export async function signup(
@@ -11,6 +15,7 @@ export async function signup(
 ) {
   try {
     const user = req.body;
+    logger.info("Called user signup");
     const result = await UserService.signup(user);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
@@ -49,6 +54,7 @@ export async function updateUser(
   try {
     const user = req.body;
     const { id } = req.params;
+    logger.info("Called updateUser");
     const result = await UserService.updateUser(id, user);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
@@ -64,6 +70,7 @@ export function deleteUserById(
   try {
     const { id } = req.params;
     const { role } = req.body;
+    logger.info("Called deleteUserById");
     const result = UserService.deleteUserById(id, role);
     res.status(HttpStatusCode.OK).json({
       result,
