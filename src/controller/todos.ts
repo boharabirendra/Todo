@@ -18,10 +18,10 @@ export function fetchTodos(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export function fetchTodoById(req: Request, res: Response, next:NextFunction) {
+export function fetchTodoById(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const {role, userId} = req.body;
+    const { role, userId } = req.body;
     const todo = TodoService.fetchTodoById(id, role, userId);
     res.status(HttpStatusCode.OK).json({
       todo,
@@ -31,14 +31,16 @@ export function fetchTodoById(req: Request, res: Response, next:NextFunction) {
   }
 }
 
-export function addTodo(
-  req: Request<any, any, Pick<ITodo, "userId" | "title" | "description">>,
-  res: Response
-) {
-  const todo = req.body;
-  logger.info("Called addTodo");
-  const message = TodoService.addTodo(todo);
-  res.status(HttpStatusCode.OK).json(message);
+export function addTodo(req: Request, res: Response, next: NextFunction) {
+  try {
+    const todo = req.body;
+    const { role } = req.body;
+    logger.info("Called addTodo");
+    const message = TodoService.addTodo(todo, role);
+    res.status(HttpStatusCode.OK).json(message);
+  } catch (error) {
+    next(error);
+  }
 }
 
 export function deleteTodoById(
@@ -48,7 +50,7 @@ export function deleteTodoById(
 ) {
   try {
     const { id } = req.params;
-    const {userId} = req.body;
+    const { userId } = req.body;
     logger.info("Called deleteTodoById");
     const message = TodoService.deleteTodoById(id, userId);
     res.status(HttpStatusCode.OK).json({ message });

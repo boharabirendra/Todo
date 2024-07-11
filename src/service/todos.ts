@@ -1,5 +1,5 @@
 import { todos } from "../data/todos";
-import { NotFoundError } from "../error/Errors";
+import { ForbiddenError, NotFoundError } from "../error/Errors";
 import { ITodo } from "../interface/todo";
 import * as TodoModel from "../model/todos"
 import { ROLES } from "../utils/enum";
@@ -17,7 +17,8 @@ export function fetchTodoById(id: string, role: ROLES, userId: string){
 }
 
 
-export function addTodo(todo: Pick<ITodo, "userId" | "title" | "description" >){
+export function addTodo(todo: Pick<ITodo, "userId" | "title" | "description" >, role:ROLES){
+    if(role === ROLES.ADMIN) throw new ForbiddenError("Forbidden access");
     const message = TodoModel.addTodo(todo);
     return message;
 }
