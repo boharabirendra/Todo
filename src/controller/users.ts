@@ -1,15 +1,16 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import HttpStatusCode from "http-status-codes";
 import { IUser } from "../interface/user";
 import * as UserService from "../service/users";
 import loggerWithNameSpace from "../utils/logger";
+import { Request } from "../interface/auth";
 
 
 const logger = loggerWithNameSpace("UserController");
 
 /**Add user */
 export async function signup(
-  req: Request<any, any, Pick<IUser, "email" | "name" | "password" | "role">>,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
@@ -25,8 +26,7 @@ export async function signup(
 
 export function getUsers(req: Request, res: Response, next: NextFunction) {
   try {
-    const { role } = req.body;
-    const users = UserService.getUsers(role);
+    const users = UserService.getUsers();
     return users.length
       ? res.status(HttpStatusCode.OK).json(users)
       : res.status(HttpStatusCode.OK).json({ message: "No users found." });
@@ -38,8 +38,7 @@ export function getUsers(req: Request, res: Response, next: NextFunction) {
 export function fetchUserById(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const { role } = req.body;
-    const user = UserService.fetchUserById(id, role);
+    const user = UserService.fetchUserById(id);
     res.status(HttpStatusCode.OK).json(user);
   } catch (error) {
     next(error);
@@ -47,12 +46,12 @@ export function fetchUserById(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function updateUser(
-  req: Request<any, any, IUser>,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const user = req.body;
+    const user = req.user!;
     const { id } = req.params;
     logger.info("Called updateUser");
     const result = await UserService.updateUser(id, user);
@@ -69,9 +68,8 @@ export function deleteUserById(
 ) {
   try {
     const { id } = req.params;
-    const { role } = req.body;
     logger.info("Called deleteUserById");
-    const result = UserService.deleteUserById(id, role);
+    const result = UserService.deleteUserById(id);
     res.status(HttpStatusCode.OK).json({
       result,
     });

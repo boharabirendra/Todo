@@ -1,7 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { verify } from "jsonwebtoken";
 import config from "../config";
 import { UnauthenticatedError } from "../error/Errors";
+import { IUser } from "../interface/user";
+import { Request } from "../interface/auth";
 
 
 export function auth(req: Request, res: Response, next: NextFunction) {
@@ -18,9 +20,9 @@ export function auth(req: Request, res: Response, next: NextFunction) {
        return;
     }
 
-    const payload: any = verify(token[1], config.jwt.secret!);
-    req.body.userId = payload.id;
-    req.body.role = payload.role;
+    const user = verify(token[1], config.jwt.secret!) as IUser;
+    req.body.userId = user.id;
+    req.user = user;
     
     next();
   } catch (error) {

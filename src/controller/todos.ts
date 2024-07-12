@@ -1,15 +1,15 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Response } from "express";
 import HttpStatusCode from "http-status-codes";
 import * as TodoService from "../service/todos";
-import { ITodo } from "../interface/todo";
 import loggerWithNameSpace from "../utils/logger";
+import { Request } from "../interface/auth";
 
 const logger = loggerWithNameSpace("TodoController");
-
+                                
 export function fetchTodos(req: Request, res: Response, next: NextFunction) {
   try {
-    const { userId, role } = req.body;
-    const todos = TodoService.fetchTodos(userId, role);
+    const user = req.user!;
+    const todos = TodoService.fetchTodos(user.id, user.role);
     res.status(HttpStatusCode.OK).json({
       todos,
     });
@@ -21,8 +21,8 @@ export function fetchTodos(req: Request, res: Response, next: NextFunction) {
 export function fetchTodoById(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const { role, userId } = req.body;
-    const todo = TodoService.fetchTodoById(id, role, userId);
+    const user = req.user!;
+    const todo = TodoService.fetchTodoById(id, user.role, user.id);
     res.status(HttpStatusCode.OK).json({
       todo,
     });
@@ -50,9 +50,9 @@ export function deleteTodoById(
 ) {
   try {
     const { id } = req.params;
-    const { userId } = req.body;
+    const user = req.user!;
     logger.info("Called deleteTodoById");
-    const message = TodoService.deleteTodoById(id, userId);
+    const message = TodoService.deleteTodoById(id, user.id);
     res.status(HttpStatusCode.OK).json({ message });
   } catch (error) {
     next(error);
