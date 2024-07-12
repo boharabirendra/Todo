@@ -1,4 +1,4 @@
-# NODE.JS Assignment 3 (Todo App With User & Admin User)
+# NODE.JS Assignment 4 (Todo App With User & Admin User)
 
 ## Steps to locally setup
 
@@ -6,7 +6,7 @@
 
     git clone git@github.com:boharabirendra/Todo.git
     cd Todo
-    git checkout assignment3
+    git checkout assignment4
     npm install
 
     # Add in .env file
