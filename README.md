@@ -1,4 +1,4 @@
-# NODE.JS Assignment 4 (Todo App With User & Admin User)
+# NODE.JS Assignment 4 (Todo App With User & Admin User & Data Validation using JOI)
 
 ## Steps to locally setup
 
