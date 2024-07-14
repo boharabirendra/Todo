@@ -12,8 +12,8 @@ const router = express();
 router.post(
   "/signup",
   validateReqBody(createUserBodySchema),
-  auth,
-  authorize(ROLES.ADMIN),
+  // auth,
+  // authorize(ROLES.ADMIN),
   UserController.signup
 );
 

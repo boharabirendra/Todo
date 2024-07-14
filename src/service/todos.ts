@@ -26,14 +26,16 @@ export function addTodo(todo: Pick<ITodo, "userId" | "title" | "description" >, 
 export function deleteTodoById(id: string, userId: string){
     const todo = todos.find(todo => todo.id === id && todo.userId === userId);
     if(!todo) throw new NotFoundError(`Todo with id ${id} does not exist`);
-    return TodoModel.deleteTodoById(id, userId);
+    const response =  TodoModel.deleteTodoById(id, userId);
+    return response;
 }
 
-export function updateTodo(id: string, todo: ITodo){
+export function updateTodo(id: string, todo: any){
     const {userId} = todo;
     const existingTodo = todos.find(todo => todo.id === id && todo.userId === userId);
     if(!existingTodo) throw new NotFoundError(`Todo with id ${id} does not exist`);
-    return TodoModel.updateTodo(id, todo);
+    const response = TodoModel.updateTodo(id, todo);
+    return response;
 }
 
 export function finishTask(id: string){

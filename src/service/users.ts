@@ -12,8 +12,7 @@ export async function signup(
   const existingUser = UserModel.getUserByEmail(user.email);
   if (existingUser) throw new ConflictError("Conflict: User already exist.");
   const hashPass = await hashPassword(user.password);
-  user.password = hashPass;
-  const result = UserModel.signup(user);
+  const result = UserModel.signup({...user, password: hashPass});
   return result;
 }
 
