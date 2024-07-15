@@ -15,6 +15,13 @@
     # Finally in terminal run
     npm run start
 
+    # Unit test
+    npm run test
+
+    # Integration test
+    npm run test:integration
+
+
 ```
 
 # API routes/paths
