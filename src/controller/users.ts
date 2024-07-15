@@ -51,7 +51,7 @@ export async function updateUser(
   next: NextFunction
 ) {
   try {
-    const user = req.user!;
+    const user = req.body;
     const { id } = req.params;
     logger.info("Called updateUser");
     const result = await UserService.updateUser(id, user);
