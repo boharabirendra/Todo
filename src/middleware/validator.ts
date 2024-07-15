@@ -21,7 +21,6 @@ export function validateReqParams(schema: Schema){
             next(new BadRequestError(error.message));
         }
         req.params = value;
-        console.log(req.params);
         next();
     }
 }

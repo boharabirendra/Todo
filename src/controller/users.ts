@@ -16,8 +16,7 @@ export async function signup(
 ) {
   try {
     const user = req.body;
-    console.log("fuck you");
-    logger.info("Called user signup");
+    // logger.info("Called user signup");
     const result = await UserService.signup(user);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {

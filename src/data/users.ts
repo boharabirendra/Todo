@@ -9,4 +9,11 @@ export const users: IUser[] = [
     password: "$2a$10$6vNqMASnomy3KOHOPEezuOcEwts8mbY8pif2Zza.COqY6Uu8X9JTm",
     role: ROLES.ADMIN
   },
+  {
+    id: "1",
+    name: "BIrendra Bohara",
+    email: "newemail@gmail.com",
+    password: "$2a$10$kanchapur.",
+    role: ROLES.USER
+  },
 ];

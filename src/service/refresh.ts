@@ -31,7 +31,6 @@ export function refreshTokens(refreshToken: string) {
       newRefreshToken,
     };
   } catch (error) {
-    console.log(error);
     return {
       error: "Invalid refresh token.",
     };

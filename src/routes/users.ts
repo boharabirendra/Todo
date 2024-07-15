@@ -18,14 +18,17 @@ router.post(
 );
 
 /**Fetch all users */
-router.get("/", auth, authorize(ROLES.ADMIN), UserController.getUsers);
+router.get("/", 
+  // auth, 
+  // authorize(ROLES.ADMIN), 
+  UserController.getUsers);
 
 /**Fetch user by id */
 router.get(
   "/:id",
   validateReqParams(paramsSchema),
-  auth,
-  authorize(ROLES.ADMIN),
+  // auth,
+  // authorize(ROLES.ADMIN),
   UserController.fetchUserById
 );
 
@@ -34,8 +37,8 @@ router.put(
   "/:id",
   validateReqParams(paramsSchema),
   validateReqBody(updateBodySchema),
-  auth,
-  authorize(ROLES.ADMIN),
+  // auth,
+  // authorize(ROLES.ADMIN),
   UserController.updateUser
 );
 
