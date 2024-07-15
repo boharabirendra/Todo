@@ -1,6 +1,5 @@
 import { NextFunction, Response } from "express";
 import HttpStatusCode from "http-status-codes";
-import { IUser } from "../interface/user";
 import * as UserService from "../service/users";
 import loggerWithNameSpace from "../utils/logger";
 import { Request } from "../interface/auth";
