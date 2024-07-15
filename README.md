@@ -1,4 +1,4 @@
-# NODE.JS Assignment 4 (Todo App With User & Admin User & Data Validation using JOI)
+# NODE.JS Assignment 5 (Add unit & integration test)
 
 ## Steps to locally setup
 
@@ -6,7 +6,7 @@
 
     git clone git@github.com:boharabirendra/Todo.git
     cd Todo
-    git checkout assignment4
+    git checkout assignment5
     npm install
 
     # Add in .env file
