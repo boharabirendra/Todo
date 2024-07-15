@@ -28,7 +28,7 @@ export function getUserByEmail(email: string) {
 }
 
 export function fetchUserById(userId: string){
-  const user = users.find(user => user.id === userId);
+  const user = users.find(user => user.id === userId.toString());
   return user;
 }
 
@@ -42,7 +42,7 @@ export function updateUser(index: number, userId: string, user: Omit<IUser, "rol
 }
 
 export function deleteUserById(id: string) {
-  const index = users.findIndex((user) => user.id === id);
+  const index = users.findIndex((user) => user.id === id.toString());
   if (index !== -1) {
     users.splice(index, 1);
     return {

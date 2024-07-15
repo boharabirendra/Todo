@@ -17,11 +17,11 @@ export function fetchFinishedTask(userId: string) {
 
 export function fetchTodoById(todoId: string, role: ROLES, userId: string) {
   if (role === ROLES.ADMIN) {
-    const todo = todos.find((todo) => todo.id === todoId);
+    const todo = todos.find((todo) => todo.id === todoId.toString());
     return todo;
   }
   const todo = todos.find((todo) => {
-    return todo.id === todoId && todo.userId === userId;
+    return todo.id === todoId && todo.userId === userId.toString();
   });
   return todo;
 }

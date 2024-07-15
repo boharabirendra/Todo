@@ -34,12 +34,13 @@ export function fetchUserById(userId: string) {
 /**Update user */
 export async function updateUser(userId: string, user: IUser) {
   const existingUser = UserModel.fetchUserById(userId);
-  if (!existingUser)
+  if (!existingUser){
     throw new NotFoundError(`User with id ${userId} does not exist`);
+  }
   const hashPass = await hashPassword(user.password);
-  user.password = hashPass;
-  const index = users.findIndex((user) => user.id === userId);
-  return UserModel.updateUser(index, userId, user);
+  const index = users.findIndex((user) => user.id === userId.toString());
+  const response =  UserModel.updateUser(index, userId, {...user, password: hashPass});
+  return response;
 }
 
 /** Delete user by id */

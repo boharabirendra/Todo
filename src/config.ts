@@ -7,7 +7,7 @@ const config = {
   jwt: {
     secret: process.env.JWT_SECRET,
     accessTokenExpiryMS: 30000,
-    refereshTokenExpiryMS: 300000,
+    refereshTokenExpiryMS: 300000000,
   },
   email: process.env.ADMIN_EMAIL
 };

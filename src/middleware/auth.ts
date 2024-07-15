@@ -13,17 +13,14 @@ export function auth(req: Request, res: Response, next: NextFunction) {
       next(new UnauthenticatedError("Access token required"));
       return;
     }
-
     const token = authorization.split(" ");
     if (token.length !== 2 || token[0] !== "Bearer") {
        next(new UnauthenticatedError("Invalid access token"));
        return;
     }
-
     const user = verify(token[1], config.jwt.secret!) as IUser;
     req.body.userId = user.id;
     req.user = user;
-    
     next();
   } catch (error) {
     next(new UnauthenticatedError("Invalid access token"));

@@ -20,7 +20,7 @@ export async function signup(
     const result = await UserService.signup(user);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    next(error);
+      next(error);
   }
 }
 
@@ -45,15 +45,15 @@ export function fetchUserById(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function updateUser(
+export async  function updateUser(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const user = req.user!;
+    const user = req.body;
     const { id } = req.params;
-    logger.info("Called updateUser");
+    // logger.info("Called updateUser");
     const result = await UserService.updateUser(id, user);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {

@@ -12,23 +12,23 @@ const router = express();
 router.post(
   "/signup",
   validateReqBody(createUserBodySchema),
-  // auth,
-  // authorize(ROLES.ADMIN),
+  auth,
+  authorize(ROLES.ADMIN),
   UserController.signup
 );
 
 /**Fetch all users */
 router.get("/", 
-  // auth, 
-  // authorize(ROLES.ADMIN), 
+  auth, 
+  authorize(ROLES.ADMIN), 
   UserController.getUsers);
 
 /**Fetch user by id */
 router.get(
   "/:id",
   validateReqParams(paramsSchema),
-  // auth,
-  // authorize(ROLES.ADMIN),
+  auth,
+  authorize(ROLES.ADMIN),
   UserController.fetchUserById
 );
 
@@ -37,8 +37,8 @@ router.put(
   "/:id",
   validateReqParams(paramsSchema),
   validateReqBody(updateBodySchema),
-  // auth,
-  // authorize(ROLES.ADMIN),
+  auth,
+  authorize(ROLES.ADMIN),
   UserController.updateUser
 );
 

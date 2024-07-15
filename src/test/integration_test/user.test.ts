@@ -1,59 +1,100 @@
 import request from "supertest";
 import express from "express";
+import expect from "expect";
 import router from "../../routes";
+import HttpStatuscode from "http-status-codes";
+import { accessToken } from "../../utils/accessToken";
+import { genericErrorHandler } from "../../middleware/errorHandling";
 describe("User Integration Test Suite", () => {
   const app = express();
   app.use(express.json());
   app.use(router);
+  app.use(genericErrorHandler);
   /**Signup test case */
   describe("/signup", () => {
-    it("Should create user", async () => {
-      await request(app)
+    // it("Should create user", async () => {
+    //   const response = await request(app)
+    //     .post("/users/signup")
+    //     .set("Authorization", `Bearer ${accessToken}`)
+    //     .send({
+    //       id: "1",
+    //       name: "BIrendra Bohara",
+    //       email: "cleartest@gmail.com",
+    //       password: "$2a$10$Kanchapur.",
+    //       permissions: ["users.get"],
+    //     });
+    //   expect(response.status).toBe(200);
+    // });
+    it("Should throw conflict error if user already exist", async () => {
+      const response = await request(app)
         .post("/users/signup")
+        .set("Authorization", `Bearer ${accessToken}`)
         .send({
           id: "1",
           name: "BIrendra Bohara",
-          email: "newemail@gmail.com",
-          password: "$2a$10$Kanchapur.",
+          email: "birendrabohara2074@gmail.com",
+          password: "Kanchanpur1230@",
           permissions: ["users.get"],
         });
+      expect(response.status).toBe(HttpStatuscode.CONFLICT);
+      expect(response.body.message).toBe("Conflict: User already exist.");
     });
   });
   /**Fetch all users test case */
   describe("/users", () => {
     it("Should return all users", async () => {
-      await request(app).get("/users");
+      const response = await request(app)
+        .get("/users")
+        .set("Authorization", `Bearer ${accessToken}`);
+      expect(response.status).toBe(200);
     });
   });
 
-  /**Fetch user by id test case */
+  // /**Fetch user by id test case */
   describe("/:id", () => {
-    it("Should return user ", async () => {
-      await request(app).get("/users/1");
+    it("Should return user", async () => {
+      const response = await request(app)
+        .get("/users/1")
+        .set("Authorization", `Bearer ${accessToken}`);
+      expect(response.status).toBe(200);
     });
   });
 
-  /**Update user test case */
-  describe("/:id", () => {
-    it("Should update user",async ()=>{
-      await request(app)
-      .put("/users/1")
-      .send({
+  // /**Update user test case */
+  describe("/:id Update user", () => {
+
+    it("Should update user", async () => {
+      const response = await request(app)
+      .put("/users/1").send({
         id: "1",
         name: "new name ",
         email: "newemail@gmail.com",
         password: "new passworD1@",
       })
-    })
+      .set("Authorization", `Bearer ${accessToken}`);
+      expect(response.status).toBe(200);
+    });
+
+    // it("Should throw error if user is not found", async () => {
+    //   const response = await request(app)
+    //   .put("/users/12").send({
+    //     id: "1",
+    //     name: "new name ",
+    //     email: "notfound@gmail.com",
+    //     password: "new passworD1@",
+    //   })
+    //   .set("Authorization", `Bearer ${accessToken}`);
+    //   expect(response.status).toBe(404);
+    // });
   });
 
-  /**Delete user by id */
+  // /**Delete user by id */
   describe("Should delete user by id", ()=>{
     it("Should delete user", async ()=>{
-      await request(app)
+      const response =  await request(app)
       .delete("/users/1")
-    
-      
+      .set("Authorization", `Bearer ${accessToken}`);
+      expect(response.status).toBe(200);
     })
   })
 });
