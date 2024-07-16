@@ -7,7 +7,7 @@
 
     git clone git@github.com:boharabirendra/Todo.git
     cd Todo
-    git checkout assignment5
+    git checkout assignment6
     npm install
 
     # Add in .env file
