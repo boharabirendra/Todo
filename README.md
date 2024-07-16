@@ -1,9 +1,7 @@
 # NODE.JS Assignment 6 (Knex data migration & seeding)
 
 ## Steps to locally setup
-## Make sure you postgres database running locally, 
-## adjust database configuration accordly
-## Check .env.example file
+### Make sure you postgres database running locally, adjust database configuration accordly Check .env.example file
 
 ```sh
 
