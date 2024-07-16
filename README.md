@@ -1,6 +1,9 @@
-# NODE.JS Assignment 5 (Add unit & integration test)
+# NODE.JS Assignment 6 (Knex data migration & seeding)
 
 ## Steps to locally setup
+## Make sure you postgres database running locally, 
+## adjust database configuration accordly
+## Check .env.example file
 
 ```sh
 
@@ -20,6 +23,12 @@
 
     # Integration test
     npm run test:integration
+
+    # Data migration
+    npm run migrate
+
+    # Data seeding
+    npm run seed:run
 
 
 ```

@@ -5,7 +5,13 @@
   "scripts": {
     "start": "nodemon ./src/index.ts",
     "test": "mocha --require  ts-node/register 'src/test/unit_test/**/*.test.ts'",
-    "test:integration": "mocha --require ts-node/register 'src/test/integration_test/**/*.test.ts'"
+    "test:integration": "mocha --require ts-node/register 'src/test/integration_test/**/*.test.ts'",
+    "knex": "knex --knexfile=./src/knexfile.ts",
+    "migrate:make": "npm run knex migrate:make --verbose",
+    "migrate": "npm run knex migrate:latest --verbose",
+    "rollback": "npm run knex migrate:rollback --verbose",
+    "seed:make": "npm run knex seed:make --verbose",
+    "seed:run": "npm run knex seed:run --verbose"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +41,8 @@
     "@types/express-rate-limit": "^6.0.0",
     "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/knex": "^0.16.1",
+    "@types/pg": "^8.11.6",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.19.2",
