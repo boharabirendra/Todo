@@ -26,10 +26,16 @@
     npm run migrate
 
     # Data seeding
-    npm run seed:run
+    cd /src
+    npm knex seed:run --specific=create_role_seed.ts
+    npx knex seed:run --specific=create_permission_seed.ts
+    npx knex seed:run --specific=create_role_permission_seed.ts
+    npx knex seed:run --specific=create_user_seed.ts
 
 
 ```
+## ER Diagram
+![logo](./public/erdiagram.png)
 
 # API routes/paths
 
