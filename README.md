@@ -1,4 +1,4 @@
-# NODE.JS Assignment 6 (Knex data migration & seeding)
+# NODE.JS Assignment 7 (Database interaction using knex)
 
 ## Steps to locally setup
 ### Make sure you have postgres database running locally, adjust database configuration accordly Check .env.example file
@@ -170,7 +170,7 @@
 
 ```sh
 
-    http://localhost:3000/todos/f (GET request)
+    http://localhost:3000/todos/done (GET request)
 
 ```
 
