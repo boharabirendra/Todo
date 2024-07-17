@@ -45,7 +45,8 @@ export async function getTodos(
 ) {
   try {
     const { query } = req;
-    const todos = await TodoService.getTodos(query);
+    const {userId} = req.body;
+    const todos = await TodoService.getTodos(query, userId);
     res.status(HttpStatusCode.OK).json(todos);
   } catch (error) {
     next(error);

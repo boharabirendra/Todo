@@ -25,7 +25,7 @@ export class UserModel extends BaseModel {
           .table("role_user");
       });
     } catch (error) {
-      throw new TransactionFail("Transaction fail");
+      throw new TransactionFail("DB operation failed");
     }
   }
   /**Update user */

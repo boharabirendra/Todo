@@ -34,7 +34,7 @@ router.get(
   "/",
   validateReqQuery(getTodoQuerySchema),
   auth,
-  authorize("user.create"),
+  authorize("todo.get"),
   TodoController.getTodos
 );
 

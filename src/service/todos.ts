@@ -2,7 +2,6 @@ import { ForbiddenError, NotFoundError } from "../error/Errors";
 import { GetTodoQuery, ITodo } from "../interface/todo";
 import * as TodoModel from "../model/todos";
 
-
 export function addTodo(todo: ITodo, userId: number) {
   try {
     return TodoModel.TodoModel.create(todo, userId);
@@ -26,8 +25,11 @@ export async function updateTodo(todo: ITodo, todoId: string, userId: string) {
   }
 }
 
-export async function getTodos(filter: GetTodoQuery) {
-  const todos = await TodoModel.TodoModel.getTodos(filter);
+export async function getTodos(filter: GetTodoQuery, userId: string) {
+  const todos = await TodoModel.TodoModel.getTodos(
+    filter,
+    Number(userId) === 1 ? null : userId
+  );
   if (!todos.length) throw new NotFoundError(`No todos found`);
   return todos;
 }

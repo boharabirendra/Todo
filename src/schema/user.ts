@@ -29,7 +29,7 @@ export const createUserBodySchema = Joi.object({
     "any.required": "Name is required",
   }),
   email: emailSchema,
-  userId: Joi.number().optional(),
+  roleId: Joi.number().optional(),
   password: passwordSchema
     .min(8)
     .messages({

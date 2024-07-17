@@ -41,16 +41,17 @@ export class TodoModel extends BaseModel {
       .first();
   }
 
-  static getTodos(filter: GetTodoQuery) {
+  static getTodos(filter: GetTodoQuery, userId?: string){
     const { q } = filter;
     const query = this.queryBuilder()
-      .select("id", "title", "description", "completed")
+      .select("id", "title", "description", "completed", "userId")
       .table("todos")
       .limit(filter.size)
       .offset((filter.page - 1) * filter.size);
     if (q) {
       query.whereLike("title", `%${q}%`);
     }
+    userId && query.where({userId});
     return query;
   }
 
