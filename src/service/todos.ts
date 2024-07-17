@@ -44,6 +44,8 @@ export async function markTodoAsDone(todoId: string, userId: string) {
   return TodoModel.TodoModel.markTodoAsDone(todoId, userId);
 }
 
-export function getDoneTodos(userId: string) {
-  return TodoModel.TodoModel.getDoneTodos(userId);
+export async function getDoneTodos(userId: string) {
+  const todos = await TodoModel.TodoModel.getDoneTodos(userId);
+  if(!todos.length) throw new NotFoundError("No completed todos found");
+  return todos;
 }
