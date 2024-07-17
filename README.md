@@ -1,4 +1,4 @@
-# NODE.JS Assignment 7 (Database interaction using knex)
+# NODE.JS Assignment 7 (Database interaction using knex & Pagination)
 
 ## Steps to locally setup
 ### Make sure you have postgres database running locally, adjust database configuration accordly Check .env.example file
@@ -77,9 +77,10 @@
 ## To see users (Only Admin Has Access)
 
 ```sh
-
     http://localhost:3000/users (GET request)
 
+    - To Filter
+    http://localhost:3000/users?q=<User name>&page=<Page number>&size=<Number of user per page> (GET request)
 ```
 
 ## To update users (Only Admin Has Access)
@@ -171,6 +172,16 @@
 ```sh
 
     http://localhost:3000/todos/done (GET request)
+
+```
+## To see todos (Admin only)
+
+```sh
+
+    http://localhost:3000/todos (GET request)
+
+    - To fileter todos
+    http://localhost:3000/todos?q=<Todo title>&page=<Page number>&size=<Number of todos per page> (GET request)
 
 ```
 
