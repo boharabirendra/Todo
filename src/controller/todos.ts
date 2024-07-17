@@ -1,43 +1,67 @@
-import express, { NextFunction, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import HttpStatusCode from "http-status-codes";
 import * as TodoService from "../service/todos";
 import loggerWithNameSpace from "../utils/logger";
-import { Request } from "../interface/auth";
+import { GetTodoQuery } from "../interface/todo";
 
 const logger = loggerWithNameSpace("TodoController");
-                                
-export function fetchTodos(req: Request, res: Response, next: NextFunction) {
-  try {
-    const user = req.user!;
-    const todos = TodoService.fetchTodos(user.id, user.role);
-    res.status(HttpStatusCode.OK).json({
-      todos,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
 
-export function fetchTodoById(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { id } = req.params;
-    const user = req.user!;
-    const todo = TodoService.fetchTodoById(id, user.role, user.id);
-    res.status(HttpStatusCode.OK).json({
-      todo,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export function addTodo(req: Request, res: Response, next: NextFunction) {
+export async function addTodo(req: Request, res: Response, next: NextFunction) {
   try {
     const todo = req.body;
-    const { role } = req.body;
     logger.info("Called addTodo");
-    const message = TodoService.addTodo(todo, role);
-    res.status(HttpStatusCode.OK).json(message);
+    await TodoService.addTodo(todo, todo.userId);
+    res.status(HttpStatusCode.OK).json({
+      message: "Todo created",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateTodo(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { id: todoId } = req.params;
+    const todo = req.body;
+    const { userId } = req.body;
+    logger.info("Called updateTodo");
+    await TodoService.updateTodo(todo, todoId, userId);
+    res.status(HttpStatusCode.OK).json({
+      message: "Todo updated",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getTodos(
+  req: Request<any, any, any, GetTodoQuery>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { query } = req;
+    const todos = await TodoService.getTodos(query);
+    res.status(HttpStatusCode.OK).json(todos);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getTodoById(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { id: todoId } = req.params;
+    const { userId } = req.body;
+    const todo = await TodoService.getTodoById(todoId, userId);
+    res.status(HttpStatusCode.OK).json(todo);
   } catch (error) {
     next(error);
   }
@@ -48,48 +72,38 @@ export function deleteTodoById(
   res: Response,
   next: NextFunction
 ) {
+  // try {
+  //   const { id } = req.params;
+  //   logger.info("Called deleteTodoById");
+  //   const message = TodoService.deleteTodoById(id, user.id.toString());
+  //   res.status(HttpStatusCode.OK).json({ message });
+  // } catch (error) {
+  //   next(error);
+  // }
+}
+
+export function markTodoAsDone(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id } = req.params;
-    const user = req.user!;
-    logger.info("Called deleteTodoById");
-    const message = TodoService.deleteTodoById(id, user.id);
-    res.status(HttpStatusCode.OK).json({ message });
+    const { id:todoId } = req.params;
+    const {userId} = req.body;
+    const result = TodoService.markTodoAsDone(todoId, userId);
+    res.status(HttpStatusCode.OK).json({
+      message: "Todo mark as done"
+    });
   } catch (error) {
     next(error);
   }
 }
 
-export function updateTodo(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { id } = req.params;
-    const { body } = req;
-    logger.info("Called updateTodo");
-    const result = TodoService.updateTodo(id, body);
-    res.status(HttpStatusCode.OK).json(result);
-  } catch (error) {
-    next(error);
-  }
-}
-
-export function finishTask(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { id } = req.params;
-    const result = TodoService.finishTask(id);
-    res.status(HttpStatusCode.OK).json(result);
-  } catch (error) {
-    next(error);
-  }
-}
-
-export function fetchFinishedTask(
+export async function getDoneTodos(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
     const { userId } = req.body;
-    const result = TodoService.fetchFinishedTask(userId);
-    res.status(HttpStatusCode.OK).json(result);
+    const todos = await TodoService.getDoneTodos(userId);
+    res.status(HttpStatusCode.OK).json(todos);
   } catch (error) {
     next(error);
   }

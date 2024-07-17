@@ -7,7 +7,6 @@ export async function login(req: Request, res: Response, next: NextFunction){
   try {
       const body: Pick<IUser, "email" | "password"> = req.body; 
       const authResult = await AuthService.login(body);
-      res.setHeader('Authorization', `Bearer ${authResult.accessToken}`);
       res.status(HttpStatusCode.OK).json(authResult); 
   } catch (error) {
       next(error);

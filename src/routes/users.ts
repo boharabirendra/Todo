@@ -5,7 +5,7 @@ import { validateReqBody, validateReqParams } from "../middleware/validator";
 import { createUserBodySchema, updateBodySchema } from "../schema/user";
 import { authorize } from "../middleware/authorize";
 import { ROLES } from "../utils/enum";
-import { paramsSchema } from "../schema/common";
+import { getParamsSchema, getUserQuerySchema } from "../schema/common";
 
 const router = express();
 /**Create user */
@@ -13,41 +13,37 @@ router.post(
   "/signup",
   validateReqBody(createUserBodySchema),
   auth,
-  authorize(ROLES.ADMIN),
+  authorize("user.create"),
   UserController.signup
 );
 
-/**Fetch all users */
-router.get("/", 
-  auth, 
-  authorize(ROLES.ADMIN), 
-  UserController.getUsers);
 
-/**Fetch user by id */
+
+// /**Fetch user by id */
 router.get(
-  "/:id",
-  validateReqParams(paramsSchema),
+  "/",
+  validateReqParams(getUserQuerySchema),
   auth,
-  authorize(ROLES.ADMIN),
-  UserController.fetchUserById
+  authorize("user.get"),
+  UserController.getUserById
 );
 
 /**Update user */
 router.put(
   "/:id",
-  validateReqParams(paramsSchema),
+  validateReqParams(getUserQuerySchema),
   validateReqBody(updateBodySchema),
   auth,
-  authorize(ROLES.ADMIN),
+  authorize("user.update"),
   UserController.updateUser
 );
 
-/**Delete user by id */
+// /**Delete user by id */
 router.delete(
   "/:id",
-  validateReqParams(paramsSchema),
+  validateReqParams(getParamsSchema),
   auth,
-  authorize(ROLES.ADMIN),
+  authorize("user.delete"),
   UserController.deleteUserById
 );
 

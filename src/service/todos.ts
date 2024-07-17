@@ -1,51 +1,48 @@
 import { todos } from "../data/todos";
 import { ForbiddenError, NotFoundError } from "../error/Errors";
-import { ITodo } from "../interface/todo";
-import * as TodoModel from "../model/todos"
+import { GetTodoQuery, ITodo } from "../interface/todo";
+import * as TodoModel from "../model/todos";
 import { ROLES } from "../utils/enum";
 
-export function fetchTodos(userId: string, role: ROLES){
-    const todos = TodoModel.fetchTodos(userId, role);
-    if(!todos.length) throw new NotFoundError(`No todos found`);
-    return todos;
+export function addTodo(todo: ITodo, userId: number) {
+  try {
+    return TodoModel.TodoModel.create(todo, userId);
+  } catch (error) {
+    throw error;
+  }
 }
 
-export function fetchTodoById(id: string, role: ROLES, userId: string){
-    const result = TodoModel.fetchTodoById(id, role, userId);
-    if(!result) throw new NotFoundError(`Todo with id ${id} does not exist`)
-    return result;
+export async function getTodoById(todoId: string, userId: string) {
+  const todo = await TodoModel.TodoModel.getTodoById(todoId, userId);
+  if (!todo) throw new NotFoundError("No todo found");
+  return todo;
 }
 
-
-export function addTodo(todo: Pick<ITodo, "userId" | "title" | "description" >, role:ROLES){
-    if(role === ROLES.ADMIN) throw new ForbiddenError("Forbidden access");
-    const message = TodoModel.addTodo(todo);
-    return message;
+export async function updateTodo(todo: ITodo, todoId: string, userId: string) {
+  try {
+    await getTodoById(todoId, userId);
+    return TodoModel.TodoModel.update(todo, todoId, userId);
+  } catch (error) {
+    throw error;
+  }
 }
 
-export function deleteTodoById(id: string, userId: string){
-    const todo = todos.find(todo => todo.id === id && todo.userId === userId);
-    if(!todo) throw new NotFoundError(`Todo with id ${id} does not exist`);
-    const response =  TodoModel.deleteTodoById(id, userId);
-    return response;
+export async function getTodos(filter: GetTodoQuery) {
+  const todos = await TodoModel.TodoModel.getTodos(filter);
+  if (!todos.length) throw new NotFoundError(`No todos found`);
+  return todos;
 }
 
-export function updateTodo(id: string, todo: any){
-    const {userId} = todo;
-    const existingTodo = todos.find(todo => todo.id === id && todo.userId === userId);
-    if(!existingTodo) throw new NotFoundError(`Todo with id ${id} does not exist`);
-    const response = TodoModel.updateTodo(id, todo);
-    return response;
+export async function deleteTodoById(todoId: string, userId: string) {
+  await getTodoById(todoId, userId);
+  await TodoModel.TodoModel.deleteTodoById(todoId, userId);
 }
 
-export function finishTask(id: string){
-    const existingTodo = todos.find(todo => todo.id === id);
-    if(!existingTodo) throw new NotFoundError(`Todo with id ${id} does not exist`);
-    return TodoModel.finishTask(id);
+export async function markTodoAsDone(todoId: string, userId: string) {
+  await getTodoById(todoId, userId);
+  await TodoModel.TodoModel.markTodoAsDone(todoId, userId);
 }
 
-export function fetchFinishedTask(userId: string){
-    const finishedTask =  TodoModel.fetchFinishedTask(userId);
-    if(!finishedTask.length) throw new NotFoundError(`No finished todos.`);
-    return finishedTask;
+export function getDoneTodos(userId: string) {
+  return TodoModel.TodoModel.getDoneTodos(userId);
 }

@@ -4,9 +4,9 @@ import config from "../config";
 import { UnauthenticatedError } from "../error/Errors";
 import { IUser } from "../interface/user";
 import { Request } from "../interface/auth";
+import { getPermissions } from "../service/users";
 
-
-export function auth(req: Request, res: Response, next: NextFunction) {
+export async function auth(req: Request, res: Response, next: NextFunction) {
   try {
     const { authorization } = req.headers;
     if (!authorization) {
@@ -15,12 +15,14 @@ export function auth(req: Request, res: Response, next: NextFunction) {
     }
     const token = authorization.split(" ");
     if (token.length !== 2 || token[0] !== "Bearer") {
-       next(new UnauthenticatedError("Invalid access token"));
-       return;
+      next(new UnauthenticatedError("Invalid access token"));
+      return;
     }
     const user = verify(token[1], config.jwt.secret!) as IUser;
+    let permissions = await getPermissions(user.id);
+    permissions = permissions.map((permission) => permission.permissionName);
+    req.body.permissions = permissions;
     req.body.userId = user.id;
-    req.user = user;
     next();
   } catch (error) {
     next(new UnauthenticatedError("Invalid access token"));

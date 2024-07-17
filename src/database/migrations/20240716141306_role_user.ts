@@ -1,27 +1,21 @@
 import { Knex } from 'knex';
 
-const TABLE_NAME = 'users';
+const TABLE_NAME = 'role_user';
 
 
 /**
- * Create table users.
+ * Create table TABLE_NAME.
  *
  * @param   {Knex} knex
  * @returns {Promise}
  */
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(TABLE_NAME, (table) => {
-    table.increments('id').primary();
-
-    table.string("name", 100).notNullable();
-    table.string("email", 100).notNullable();
-    table.string("password", 100).notNullable();
-    table.boolean("isAdmin").notNullable();
-    table.integer("role_id").unsigned().notNullable();
-    table.foreign("role_id").references("id").inTable("role");
-
+    table.integer("user_id").notNullable();
+    table.integer("role_id").notNullable();
+    table.foreign("role_id").references("id").inTable("roles");
+    table.foreign("user_id").references("id").inTable("users");
     table.timestamps(true, true);
-    
   });
 }
 

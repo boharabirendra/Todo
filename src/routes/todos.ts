@@ -1,38 +1,55 @@
 import express from "express";
 import * as TodoController from "../controller/todos";
 import { auth } from "../middleware/auth";
-import { validateReqBody, validateReqParams } from "../middleware/validator";
-import { createTodoSchema, updateTodoSchema } from "../schema/todo";
+import {
+  validateReqBody,
+  validateReqParams,
+  validateReqQuery,
+} from "../middleware/validator";
+import {
+  createTodoSchema,
+  getTodoQuerySchema,
+  updateTodoSchema,
+} from "../schema/todo";
 import { authorize } from "../middleware/authorize";
 import { ROLES } from "../utils/enum";
-import { paramsSchema } from "../schema/common";
+import { getParamsSchema, getUserQuerySchema } from "../schema/common";
 
 const router = express();
-
-/**Fetch todos */
-router.get("/", auth, TodoController.fetchTodos);
-
-/**Fetch todo by id */
-router.get(
-  "/:id",
-  validateReqParams(paramsSchema),
-  auth,
-  TodoController.fetchTodoById
-);
 
 /**Add todo */
 router.post(
   "/",
   validateReqBody(createTodoSchema),
   auth,
-  authorize(ROLES.USER),
+  authorize("todo.create"),
   TodoController.addTodo
+);
+
+/**Fetch done todos */
+router.get("/done", auth, authorize("todo.get"), TodoController.getDoneTodos);
+
+/**Fetch todos */
+router.get(
+  "/",
+  validateReqQuery(getTodoQuerySchema),
+  auth,
+  authorize("user.create"),
+  TodoController.getTodos
+);
+
+// /**Fetch todo by id */
+router.get(
+  "/:id",
+  validateReqParams(getParamsSchema),
+  auth,
+  TodoController.getTodoById
 );
 
 /**Add todo */
 router.delete(
   "/:id",
-  validateReqParams(paramsSchema),
+  validateReqParams(getUserQuerySchema),
   auth,
   TodoController.deleteTodoById
 );
@@ -41,19 +58,20 @@ router.delete(
 router.put(
   "/:id",
   validateReqBody(updateTodoSchema),
+  validateReqParams(getParamsSchema),
   auth,
+  authorize("todo.update"),
   TodoController.updateTodo
 );
 
 /**Mark todo as done */
 router.put(
   "/done/:id",
-  validateReqParams(paramsSchema),
+  validateReqParams(getUserQuerySchema),
   auth,
-  TodoController.finishTask
+  TodoController.markTodoAsDone
 );
 
-/**Fetch done todos */
-router.get("/f", auth, TodoController.fetchFinishedTask);
+
 
 export default router;

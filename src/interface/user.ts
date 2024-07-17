@@ -1,9 +1,15 @@
 import { ROLES } from "../utils/enum";
 
 export interface IUser{
-    id: string,
+    id: number,
     name: string,
     email: string,
     password: string;
-    role: ROLES
+    roleId: number
+}
+
+export interface GetUserQuery{
+    q?: string;
+    page?: number;
+    size?: number;
 }

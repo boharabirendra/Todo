@@ -1,7 +1,6 @@
 export class BaseError extends Error {
   constructor(message = "") {
     super(message);
-    this.message = message;
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
@@ -35,4 +34,10 @@ export class BadRequestError extends BaseError {
     constructor(message = "BadRequest") {
       super(message);
     }
+}
+
+export class TransactionFail extends BaseError {
+  constructor(message = "Transaction fail") {
+    super(message);
+  }
 }

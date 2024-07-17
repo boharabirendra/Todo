@@ -7,3 +7,9 @@ export interface ITodo {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface GetTodoQuery{
+  q?: string;
+  page?: number;
+  size?: number;
+}

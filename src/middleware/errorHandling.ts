@@ -5,6 +5,7 @@ import {
   ConflictError,
   ForbiddenError,
   NotFoundError,
+  TransactionFail,
   UnauthenticatedError,
 } from "../error/Errors";
 
@@ -42,6 +43,12 @@ export function genericErrorHandler(
   }
   if (error instanceof BadRequestError) {
     return res.status(HttpStatusCodes.BAD_REQUEST).json({
+      message: error.message,
+    });
+  }
+
+  if (error instanceof TransactionFail) {
+    return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({
       message: error.message,
     });
   }

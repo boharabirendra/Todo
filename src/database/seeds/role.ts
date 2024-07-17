@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-const TABLE_NAME = 'users';
+const TABLE_NAME = 'roles';
 
 /**
  * Delete existing entries and seed values for table TABLE_NAME.
@@ -14,12 +14,11 @@ export function seed(knex: Knex): Promise<void> {
     .then(() => {
       return knex(TABLE_NAME).insert([
         {
-          name: 'Birendra Bohara',
-          email: 'birendrabohara2074@gmail.com',
-          password: '$2a$10$6vNqMASnomy3KOHOPEezuOcEwts8mbY8pif2Zza.COqY6Uu8X9JTm',
-          isAdmin: true,
-          role_id: 1
-        }
+          role_name: 'admin'
+        },
+        {
+          role_name: 'user'
+        },
       ]);
     });
 }

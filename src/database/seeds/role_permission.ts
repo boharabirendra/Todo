@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-const TABLE_NAME = 'permission';
+const TABLE_NAME = 'role_permission';
 
 /**
  * Delete existing entries and seed values for table TABLE_NAME.
@@ -14,33 +14,41 @@ export function seed(knex: Knex): Promise<void> {
     .then(() => {
       return knex(TABLE_NAME).insert([
         {
-          permission_name: "user.create"
+          role_id: 1,
+          permission_id: 9
         },
         {
-          permission_name: "user.update"
+          role_id: 1,
+          permission_id: 10
         },
         {
-          permission_name: "user.delete"
+          role_id: 1,
+          permission_id: 11
         },
         {
-          permission_name: "user.get"
+          role_id: 1,
+          permission_id: 12
         },
         {
-          permission_name: "todo.create"
+          role_id: 1,
+          permission_id: 16
         },
         {
-          permission_name: "todo.update"
+          role_id: 2,
+          permission_id: 13
         },
         {
-          permission_name: "todo.delete"
+          role_id: 2,
+          permission_id: 14
         },
         {
-          permission_name: "todo.get"
+          role_id: 2,
+          permission_id: 15
         },
         {
-          permission_name: "todo.getAll"
+          role_id: 2,
+          permission_id: 16
         },
-       
       ]);
     });
 }
