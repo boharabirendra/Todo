@@ -67,28 +67,35 @@ export async function getTodoById(
   }
 }
 
-export function deleteTodoById(
+export async function deleteTodoById(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  // try {
-  //   const { id } = req.params;
-  //   logger.info("Called deleteTodoById");
-  //   const message = TodoService.deleteTodoById(id, user.id.toString());
-  //   res.status(HttpStatusCode.OK).json({ message });
-  // } catch (error) {
-  //   next(error);
-  // }
+  try {
+    const { id: todoId } = req.params;
+    const { userId } = req.body;
+    logger.info("Called deleteTodoById");
+    await TodoService.deleteTodoById(todoId, userId);
+    res.status(HttpStatusCode.OK).json({
+      message: "Todo deleted",
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
-export function markTodoAsDone(req: Request, res: Response, next: NextFunction) {
+export async function markTodoAsDone(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    const { id:todoId } = req.params;
-    const {userId} = req.body;
-    const result = TodoService.markTodoAsDone(todoId, userId);
+    const { id: todoId } = req.params;
+    const { userId } = req.body;
+    await TodoService.markTodoAsDone(todoId, userId);
     res.status(HttpStatusCode.OK).json({
-      message: "Todo mark as done"
+      message: "Todo mark as done",
     });
   } catch (error) {
     next(error);

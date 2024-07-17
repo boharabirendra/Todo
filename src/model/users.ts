@@ -1,4 +1,3 @@
-import { users } from "../data/users";
 import { TransactionFail } from "../error/Errors";
 import { GetUserQuery, IUser } from "../interface/user";
 import { BaseModel } from "./base";
@@ -45,7 +44,6 @@ export class UserModel extends BaseModel {
      try {
       await this.queryBuilder().delete().table("users").where({ id });
      } catch (error) {
-      console.log(error);
       throw new TransactionFail("DB operation failed")
      }
   }

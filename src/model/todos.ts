@@ -1,4 +1,3 @@
-import { todos } from "../data/todos";
 import { TransactionFail } from "../error/Errors";
 import { GetTodoQuery, ITodo } from "../interface/todo";
 import { BaseModel } from "./base";

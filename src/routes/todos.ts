@@ -49,7 +49,7 @@ router.get(
 /**Add todo */
 router.delete(
   "/:id",
-  validateReqParams(getUserQuerySchema),
+  validateReqParams(getParamsSchema),
   auth,
   TodoController.deleteTodoById
 );
@@ -67,8 +67,9 @@ router.put(
 /**Mark todo as done */
 router.put(
   "/done/:id",
-  validateReqParams(getUserQuerySchema),
+  validateReqParams(getParamsSchema),
   auth,
+  authorize("todo.update"),
   TodoController.markTodoAsDone
 );
 

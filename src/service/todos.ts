@@ -1,8 +1,7 @@
-import { todos } from "../data/todos";
 import { ForbiddenError, NotFoundError } from "../error/Errors";
 import { GetTodoQuery, ITodo } from "../interface/todo";
 import * as TodoModel from "../model/todos";
-import { ROLES } from "../utils/enum";
+
 
 export function addTodo(todo: ITodo, userId: number) {
   try {
@@ -35,12 +34,12 @@ export async function getTodos(filter: GetTodoQuery) {
 
 export async function deleteTodoById(todoId: string, userId: string) {
   await getTodoById(todoId, userId);
-  await TodoModel.TodoModel.deleteTodoById(todoId, userId);
+  return TodoModel.TodoModel.deleteTodoById(todoId, userId);
 }
 
 export async function markTodoAsDone(todoId: string, userId: string) {
   await getTodoById(todoId, userId);
-  await TodoModel.TodoModel.markTodoAsDone(todoId, userId);
+  return TodoModel.TodoModel.markTodoAsDone(todoId, userId);
 }
 
 export function getDoneTodos(userId: string) {

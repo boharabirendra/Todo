@@ -1,8 +1,6 @@
-import { GetUserQuery, IUser } from "../interface/user";
+import { IUser } from "../interface/user";
 import * as UserModel from "../model/users";
-import { ROLES } from "../utils/enum";
-import { ConflictError, NotFoundError } from "../error/Errors";
-import { users } from "../data/users";
+import { NotFoundError } from "../error/Errors";
 import { hashPassword } from "../utils/hashPassword";
 
 /**Add user by admin */
