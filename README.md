@@ -174,13 +174,13 @@
     http://localhost:3000/todos/done (GET request)
 
 ```
-## To see todos (Admin only)
-
+## To see todos (Pagination)
 ```sh
 
     http://localhost:3000/todos (GET request)
 
     - To fileter todos
+    
     http://localhost:3000/todos?q=<Todo title>&page=<Page number>&size=<Number of todos per page> (GET request)
 
 ```
