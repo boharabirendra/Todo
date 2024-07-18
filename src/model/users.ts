@@ -25,6 +25,7 @@ export class UserModel extends BaseModel {
           .table("role_user");
       });
     } catch (error) {
+      
       throw new TransactionFail("DB operation failed");
     }
   }
@@ -82,16 +83,20 @@ export class UserModel extends BaseModel {
   }
 
   static getUsers(filter: GetUserQuery) {
-    const { q } = filter;
-    const query = this.queryBuilder()
-      .select("id", "name", "email")
-      .table("users")
-      .limit(filter.size)
-      .offset((filter.page - 1) * filter.size);
-    if (q) {
-      query.whereLike("name", `%${q}%`);
-    }
-    return query;
+   try {
+     const { q } = filter;
+     const query = this.queryBuilder()
+       .select("id", "name", "email")
+       .table("users")
+       .limit(filter.size)
+       .offset((filter.page - 1) * filter.size);
+     if (q) {
+       query.whereLike("name", `%${q}%`);
+     }
+     return query;
+   } catch (error) {
+     throw new TransactionFail("DB operatoin failed");
+   }
   }
 
   /**Fetch total number of users */

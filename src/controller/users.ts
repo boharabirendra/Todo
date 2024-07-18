@@ -16,17 +16,23 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
       message: "User created",
     });
   } catch (error) {
+    
     next(error);
   }
 }
 
 export async function getUserById(
   req: Request<any, any, any, GetUserQuery>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) {
-  const { userId } = req.body;
-  const user = await UserService.getUserById(userId);
-  res.json(user);
+ try {
+   const { id } = req.params;
+   const user = await UserService.getUserById(id);
+   res.json(user);
+ } catch (error) {
+   next(error);
+ }
 }
 
 export async function updateUser(
@@ -59,6 +65,18 @@ export async function deleteUserById(
     res.status(HttpStatusCode.OK).json({
       message: "User deleted",
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getUsers(req: Request<any, any, any, GetUserQuery>,
+  res: Response,
+  next: NextFunction) {
+  try {
+    const {query} = req;
+    const users = await UserService.getUsers(query);
+    res.status(HttpStatusCode.OK).json(users);
   } catch (error) {
     next(error);
   }

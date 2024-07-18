@@ -13,8 +13,8 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(TABLE_NAME, (table) => {
     table.integer("user_id").notNullable();
     table.integer("role_id").notNullable();
-    table.foreign("role_id").references("id").inTable("roles");
-    table.foreign("user_id").references("id").inTable("users");
+    table.foreign("role_id").references("id").inTable("roles").onDelete("cascade");
+    table.foreign("user_id").references("id").inTable("users").onDelete("cascade");
     table.timestamps(true, true);
   });
 }

@@ -11,7 +11,7 @@ const TABLE_NAME = 'users';
  */
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.alterTable(TABLE_NAME, (table) => {
-    table.string("email", 100).unique().alter();
+    table.string("email", 100).notNullable().unique().alter();
   });
 }
 
@@ -23,6 +23,6 @@ export async function up(knex: Knex): Promise<void> {
  */
 export async function down(knex: Knex): Promise<void> {
   return knex.schema.alterTable(TABLE_NAME, (table) => {
-    table.string("email", 100).alter();
+    table.string("email", 100).notNullable().alter();
   });
 }

@@ -15,7 +15,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string("description", 200).notNullable();
     table.boolean("completed").defaultTo(false).notNullable();
     table.integer("user_id").notNullable();
-    table.foreign("user_id").references("id").inTable("users").onDelete("CASCADE");
+    table.foreign("user_id").references("id").inTable("users").onDelete("cascade");
     table.timestamps(true, true);
   });
 }

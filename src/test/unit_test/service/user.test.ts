@@ -4,18 +4,27 @@ import * as UserModel from "../../../model/users";
 import * as UserService from "../../../service/users";
 import { ConflictError, NotFoundError } from "../../../error/Errors";
 import * as HashPassword from "../../../utils/hashPassword";
-import { users } from "../../../data/users";
+import { GetUserQuery } from "../../../interface/user";
+
 
 describe("User Service Test Suite", () => {
+  const user = {
+    id: 2,
+    name: "BIrendra Bohara",
+    email: "ram@gmail.com",
+    password: "Kanchanpur1230@",
+    roleId: 2,
+  };
+  const filter: GetUserQuery = {size: 4, page: 1}
   /**Signup Test Cases */
   describe("signup", () => {
     let userModelSignupStub: Sinon.SinonStub;
     let userModelGetUserByEmail: Sinon.SinonStub;
     let utilsHashPassword: Sinon.SinonStub;
     beforeEach(() => {
-      userModelSignupStub = Sinon.stub(UserModel, "signup");
+      userModelSignupStub = Sinon.stub(UserModel.UserModel, "create");
       utilsHashPassword = Sinon.stub(HashPassword, "hashPassword");
-      userModelGetUserByEmail = Sinon.stub(UserModel, "getUserByEmail");
+      userModelGetUserByEmail = Sinon.stub(UserModel.UserModel, "getUserByEmail");
     });
     afterEach(() => {
       userModelSignupStub.restore();
@@ -24,13 +33,6 @@ describe("User Service Test Suite", () => {
     });
 
     it("Should create user", async () => {
-      const user = {
-        id: "0",
-        name: "BIrendra Bohara",
-        email: "ram@gmail.com",
-        password: "kanchanpur1230",
-        role: 1,
-      };
       utilsHashPassword.returns("hashedPassword");
       userModelGetUserByEmail.returns(null);
       userModelSignupStub.returns(user);
@@ -46,16 +48,7 @@ describe("User Service Test Suite", () => {
       ]);
     });
     it("Should throw conflict error if user already exist", async () => {
-      const user = {
-        id: "0",
-        name: "BIrendra Bohara",
-        email: "ram@gmail.com",
-        password: "kanchanpur1230",
-        role: 1,
-      };
-
       userModelGetUserByEmail.resolves(user);
-
       expect(async () => await UserService.signup(user)).rejects.toThrow(
         new ConflictError("Conflict: User already exist.")
       );
@@ -69,30 +62,24 @@ describe("User Service Test Suite", () => {
   describe("getUsers", () => {
     let userModelGetUsers: Sinon.SinonStub;
     beforeEach(() => {
-      userModelGetUsers = Sinon.stub(UserModel, "getUsers");
+      userModelGetUsers = Sinon.stub(UserModel.UserModel, "getUsers");
     });
     afterEach(() => {
       userModelGetUsers.restore();
     });
     it("Should return all users", () => {
       const users = [
-        {
-          id: "0",
-          name: "BIrendra Bohara",
-          email: "birendra@gmail.com",
-          password: "kanchanpur1230",
-          role: 1,
-        },
+         user,
         {
           id: "1",
           name: "Ram Bohara",
           email: "ram@gmail.com",
           password: "ram123",
-          role: 0,
+          roleId: 0,
         },
       ];
       userModelGetUsers.returns(users);
-      const response = UserService.getUsers();
+      const response = UserService.getUsers(filter);
       expect(response).toStrictEqual(users);
       expect(userModelGetUsers.callCount).toBe(1);
       expect(userModelGetUsers.getCall(0).args).toStrictEqual([]);
@@ -102,7 +89,7 @@ describe("User Service Test Suite", () => {
   describe("getUserByEmail", () => {
     let userModelGetUserByEmail: Sinon.SinonStub;
     beforeEach(() => {
-      userModelGetUserByEmail = Sinon.stub(UserModel, "getUserByEmail");
+      userModelGetUserByEmail = Sinon.stub(UserModel.UserModel, "getUserByEmail");
     });
     afterEach(() => {
       userModelGetUserByEmail.restore();
@@ -137,7 +124,7 @@ describe("User Service Test Suite", () => {
   describe("getUserById", () => {
     let userModelGetUserByIdStub: Sinon.SinonStub;
     beforeEach(() => {
-      userModelGetUserByIdStub = Sinon.stub(UserModel, "fetchUserById");
+      userModelGetUserByIdStub = Sinon.stub(UserModel.UserModel, "getUserById");
     });
     afterEach(() => {
       userModelGetUserByIdStub.restore();
@@ -145,14 +132,14 @@ describe("User Service Test Suite", () => {
     /**User found case */
     it("Should return user if user found", () => {
       const mockedUser = {
-        id: "0",
+        id: "1",
         name: "test name",
         email: "test@gmail.com",
         password: "test",
-        role: 0,
+        roleId: 1,
       };
       userModelGetUserByIdStub.returns(mockedUser);
-      const response = UserService.fetchUserById("0");
+      const response = UserService.getUserById("1");
       expect(response).toStrictEqual(mockedUser);
       expect(userModelGetUserByIdStub.callCount).toBe(1);
       expect(userModelGetUserByIdStub.getCall(0).args).toStrictEqual(["0"]);
@@ -161,7 +148,7 @@ describe("User Service Test Suite", () => {
     /**User not found case */
     it("Should throw error if user is not found", () => {
       userModelGetUserByIdStub.returns(null);
-      expect(() => UserService.fetchUserById("100")).toThrow(
+      expect(() => UserService.getUserById("100")).toThrow(
         new NotFoundError("User with id 100 does not exist")
       );
       expect(userModelGetUserByIdStub.callCount).toBe(1);
@@ -173,31 +160,19 @@ describe("User Service Test Suite", () => {
     let userModelUpdateUserStub: Sinon.SinonStub;
     let utilsHashPasswordStub: Sinon.SinonStub;
     let userModelGetUserByIdStub: Sinon.SinonStub;
-    let usersDataStub: Sinon.SinonStub;
     beforeEach(() => {
-      userModelUpdateUserStub = Sinon.stub(UserModel, "updateUser");
+      userModelUpdateUserStub = Sinon.stub(UserModel.UserModel, "update");
       utilsHashPasswordStub = Sinon.stub(HashPassword, "hashPassword");
-      userModelGetUserByIdStub = Sinon.stub(UserModel, "fetchUserById");
-      usersDataStub = Sinon.stub(users, "findIndex");
+      userModelGetUserByIdStub = Sinon.stub(UserModel.UserModel, "getUserById");
     });
 
     afterEach(() => {
       userModelUpdateUserStub.restore();
       utilsHashPasswordStub.restore();
       userModelGetUserByIdStub.restore();
-      usersDataStub.restore();
     });
 
     it("Should update user", async () => {
-      const userId = "1";
-      const user = {
-        id: userId,
-        name: "Updated Name",
-        email: "updatedemail@gmail.com",
-        password: "newpassword",
-        role: 1,
-      };
-
       const existingUser = { ...user, password: "oldpassword" };
       const hashedPassword = "hashedPassword";
       const updatedUser = { ...user, password: hashedPassword };
@@ -205,13 +180,12 @@ describe("User Service Test Suite", () => {
       userModelGetUserByIdStub.resolves(existingUser);
       utilsHashPasswordStub.resolves("hashedPassword");
       userModelUpdateUserStub.returns(updatedUser);
-      usersDataStub.returns(0);
-      const response = await UserService.updateUser(userId, existingUser);
+      const response = await UserService.updateUser("2", user);
       expect(response).toStrictEqual(updatedUser);
       expect(userModelUpdateUserStub.callCount).toBe(1);
       expect(userModelUpdateUserStub.getCall(0).args).toStrictEqual([
         0,
-        userId,
+        "2",
         updatedUser,
       ]);
     });
@@ -220,7 +194,7 @@ describe("User Service Test Suite", () => {
   describe("deleteUserById", ()=>{
     let userModelDeleteUserByIdStub: Sinon.SinonStub;
     beforeEach(()=>{
-        userModelDeleteUserByIdStub = Sinon.stub(UserModel, "deleteUserById");
+        userModelDeleteUserByIdStub = Sinon.stub(UserModel.UserModel, "deleteUserById");
     });
     afterEach(()=>{
         userModelDeleteUserByIdStub.restore();

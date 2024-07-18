@@ -18,6 +18,18 @@ export function seed(knex: Knex): Promise<void> {
           email: "birendrabohara2074@gmail.com",
           password:
             "$2a$10$6vNqMASnomy3KOHOPEezuOcEwts8mbY8pif2Zza.COqY6Uu8X9JTm",
+        },
+        {
+          name: "Ram Dobal",
+          email: "ram123@gmail.com",
+          password:
+            "$2a$10$6vNqMASnomy3KOHOPEezuOcEwts8mbY8pif2Zza.COqY6Uu8X9JTm",
+        },
+        {
+          name: "Hari Ayer",
+          email: "hari@gmail.com",
+          password:
+            "$2a$10$6vNqMASnomy3KOHOPEezuOcEwts8mbY8pif2Zza.COqY6Uu8X9JTm",
         }
       ]);
     });

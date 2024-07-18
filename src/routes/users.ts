@@ -1,10 +1,13 @@
 import express from "express";
 import * as UserController from "../controller/users";
 import { auth } from "../middleware/auth";
-import { validateReqBody, validateReqParams } from "../middleware/validator";
+import {
+  validateReqBody,
+  validateReqParams,
+  validateReqQuery,
+} from "../middleware/validator";
 import { createUserBodySchema, updateBodySchema } from "../schema/user";
 import { authorize } from "../middleware/authorize";
-import { ROLES } from "../utils/enum";
 import { getParamsSchema, getUserQuerySchema } from "../schema/common";
 
 const router = express();
@@ -17,12 +20,19 @@ router.post(
   UserController.signup
 );
 
-
-
-// /**Fetch user by id */
+/**Filters */
 router.get(
   "/",
-  validateReqParams(getUserQuerySchema),
+  validateReqQuery(getUserQuerySchema),
+  auth,
+  authorize("user.get"),
+  UserController.getUsers
+);
+
+/**Fetch user by id */
+router.get(
+  "/:id",
+  validateReqParams(getParamsSchema),
   auth,
   authorize("user.get"),
   UserController.getUserById
@@ -31,7 +41,7 @@ router.get(
 /**Update user */
 router.put(
   "/:id",
-  validateReqParams(getUserQuerySchema),
+  validateReqParams(getParamsSchema),
   validateReqBody(updateBodySchema),
   auth,
   authorize("user.update"),

@@ -1,4 +1,4 @@
-import { IUser } from "../interface/user";
+import { GetUserQuery, IUser } from "../interface/user";
 import * as UserModel from "../model/users";
 import { NotFoundError } from "../error/Errors";
 import { hashPassword } from "../utils/hashPassword";
@@ -23,7 +23,11 @@ export function getPermissions(userId: number) {
 export async function getUserById(userId: string) {
   const user = await UserModel.UserModel.getUserById(userId);
   if (!user) throw new NotFoundError("No user found");
-  return;
+  return user;
+}
+
+export function getUsers(filter: GetUserQuery){
+      return UserModel.UserModel.getUsers(filter);
 }
 
 /**Update user */
