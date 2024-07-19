@@ -1,11 +1,10 @@
-import { TransactionFail } from "../error/Errors";
 import { GetUserQuery, IUser } from "../interface/user";
+import { ApiError } from "../utils/ApiError";
 import { BaseModel } from "./base";
 
 export class UserModel extends BaseModel {
   /**Create user */
   static async create(user: IUser) {
-    try {
       const { email, name, password, roleId } = user;
       await this.queryBuilder().transaction(async (trx) => {
         await trx
@@ -24,10 +23,6 @@ export class UserModel extends BaseModel {
           .insert({ userId: recentCreatedUser.id, roleId })
           .table("role_user");
       });
-    } catch (error) {
-      
-      throw new TransactionFail("DB operation failed");
-    }
   }
   /**Update user */
   static async update(id: string, user: IUser) {
@@ -37,16 +32,12 @@ export class UserModel extends BaseModel {
       email,
       password,
     };
-    await this.queryBuilder().update(userToUpdate).table("users").where({ id });
+    return this.queryBuilder().update(userToUpdate).table("users").where({ id });
   }
 
   /**Delete user */
-  static async deleteUserById(id: string) {
-     try {
-      await this.queryBuilder().delete().table("users").where({ id });
-     } catch (error) {
-      throw new TransactionFail("DB operation failed")
-     }
+  static deleteUserById(id: string) {
+      return this.queryBuilder().delete().table("users").where({ id });
   }
 
   /**Fetch user by email */
@@ -60,7 +51,7 @@ export class UserModel extends BaseModel {
 
   /**Fetch user by email */
   static getUserById(id: string) {
-    return this.queryBuilder()
+     return this.queryBuilder()
       .select("id", "name", "email")
       .table("users")
       .where({ id })
@@ -95,7 +86,7 @@ export class UserModel extends BaseModel {
      }
      return query;
    } catch (error) {
-     throw new TransactionFail("DB operatoin failed");
+     throw new ApiError(404,"No users found");
    }
   }
 

@@ -12,7 +12,6 @@ import {
   updateTodoSchema,
 } from "../schema/todo";
 import { authorize } from "../middleware/authorize";
-import { ROLES } from "../utils/enum";
 import { getParamsSchema, getUserQuerySchema } from "../schema/common";
 
 const router = express();

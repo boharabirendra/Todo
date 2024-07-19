@@ -1,5 +1,5 @@
-import { TransactionFail } from "../error/Errors";
 import { GetTodoQuery, ITodo } from "../interface/todo";
+import { ApiError } from "../utils/ApiError";
 import { BaseModel } from "./base";
 
 export class TodoModel extends BaseModel {
@@ -13,24 +13,20 @@ export class TodoModel extends BaseModel {
       };
       return this.queryBuilder().insert(todoToCreate).table("todos");
     } catch (error) {
-      throw new TransactionFail("DB operation failed");
+      throw new ApiError(500, "DB operation failed");
     }
   }
-  static async update(todo: ITodo, todoId: string, userId: string) {
-    try {
+  static update(todo: ITodo, todoId: string, userId: string) {
       const { title, description } = todo;
       const todoToUpdate = {
         title,
         description,
         updatedAt: new Date(),
       };
-      await this.queryBuilder()
+      return this.queryBuilder()
         .update(todoToUpdate)
         .table("todos")
         .where({ id: todoId, userId });
-    } catch (error) {
-      throw new TransactionFail("DB operation failed");
-    }
   }
 
   static getTodoById(todoId: string, userId: string) {

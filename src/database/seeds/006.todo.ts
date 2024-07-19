@@ -14,26 +14,31 @@ export function seed(knex: Knex): Promise<void> {
     .then(() => {
       return knex(TABLE_NAME).insert([
         {
+          id: 1,
           title: "new title 1",
           description: "this is new description 1",
           user_id: 2
         },
         {
+          id: 2,
           title: "new title 2",
           description: "this is new description 1",
           user_id: 2
         },
         {
+          id: 3,
           title: "new title 3",
           description: "this is new description 1",
           user_id: 3
         },
         {
+          id: 4,
           title: "new title 3",
           description: "this is new description 1",
           user_id: 3
         },
         {
+          id: 5,
           title: "new title 3",
           description: "this is new description 1",
           user_id: 3

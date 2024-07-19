@@ -3,11 +3,7 @@ import config from "./config";
 export const baseKnexConfig: Knex.Config = {
   client: config.database.client,
   connection: {
-    host: config.database.host,
-    port: +config.database.port,
-    user: config.database.user,
-    password: config.database.password,
-    database: config.database.name,
+    connectionString: config.database.connectionUrl
   },
 };
 

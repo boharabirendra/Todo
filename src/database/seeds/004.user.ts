@@ -14,18 +14,21 @@ export function seed(knex: Knex): Promise<void> {
     .then(() => {
       return knex(TABLE_NAME).insert([
         {
+          id: 1,
           name: "BIrendra Bohara",
           email: "birendrabohara2074@gmail.com",
           password:
             "$2a$10$6vNqMASnomy3KOHOPEezuOcEwts8mbY8pif2Zza.COqY6Uu8X9JTm",
         },
         {
+          id: 2,
           name: "Ram Dobal",
           email: "ram123@gmail.com",
           password:
             "$2a$10$6vNqMASnomy3KOHOPEezuOcEwts8mbY8pif2Zza.COqY6Uu8X9JTm",
         },
         {
+          id: 3,
           name: "Hari Ayer",
           email: "hari@gmail.com",
           password:
