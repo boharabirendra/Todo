@@ -30,50 +30,47 @@ export const getUserById = asyncHandler(
     res: Response,
     next: NextFunction
   ) => {
-      const { id } = req.params;
-      const user = await UserService.getUserById(id);
-      if(!user) next(new ApiError(404, `User with id ${id} does not exist`));
-      res.json(user);
+    const { id } = req.params;
+    const user = await UserService.getUserById(id);
+    if (!user) next(new ApiError(404, `User with id ${id} does not exist`));
+    res.json(user);
   }
 );
 
-export async function updateUser(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const user = req.body;
-    const { id } = req.params;
-    logger.info("Called updateUser");
-    const response = await UserService.updateUser(id, user);
-    if (!response) next(new ApiError(404, `User with id ${id} does not exist`));
-    res.status(HttpStatusCode.OK).json({
-      message: "User updated",
-    });
-  } catch (error) {
-    next(new ApiError(500, "DB operation failed"));
+export const updateUser = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.body;
+      const { id } = req.params;
+      logger.info("Called updateUser");
+      const response = await UserService.updateUser(id, user);
+      if (!response)
+        next(new ApiError(404, `User with id ${id} does not exist`));
+      res.status(HttpStatusCode.OK).json({
+        message: "User updated",
+      });
+    } catch (error) {
+      next(new ApiError(500, "DB operation failed"));
+    }
   }
-}
+);
 
-export const deleteUserById = asyncHandler(async(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const deleteUserById = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { id: userId } = req.params;
     const response = await UserService.deleteUserById(userId);
-    if(!response) throw new ApiError(500, "Deletion failed");
+    if (!response) throw new ApiError(500, "Deletion failed");
     res.status(HttpStatusCode.OK).json({
       message: "User deleted",
     });
-})
+  }
+);
 
-export async function getUsers(
+export const getUsers = asyncHandler(async(
   req: Request<any, any, any, GetUserQuery>,
   res: Response,
   next: NextFunction
-) {
+) =>{
   try {
     const { query } = req;
     const users = await UserService.getUsers(query);
@@ -81,4 +78,4 @@ export async function getUsers(
   } catch (error) {
     next(error);
   }
-}
+})

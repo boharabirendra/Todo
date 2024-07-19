@@ -6,7 +6,7 @@ export class UserModel extends BaseModel {
   /**Create user */
   static async create(user: IUser) {
       const { email, name, password, roleId } = user;
-      await this.queryBuilder().transaction(async (trx) => {
+      return this.queryBuilder().transaction(async (trx) => {
         await trx
           .insert({
             name,
