@@ -1,293 +1,252 @@
-// import Sinon from "sinon";
-// import expect from "expect";
-// import * as TodoModel from "../../../model/todos";
-// import * as TodoService from "../../../service/todos";
-// import { ForbiddenError, NotFoundError } from "../../../error/Errors";
+import Sinon from "sinon";
+import expect from "expect";
+import * as TodoModel from "../../../model/todos";
+import * as TodoService from "../../../service/todos";
+import { GetTodoQuery, ITodo } from "../../../interface/todo";
+import { ApiError } from "../../../utils/ApiError";
+import HttpStatusCode from "http-status-codes";
 
-// describe("Todo Service Test Suite", () => {
-//   const todos = [
-//     {
-//       id: "1",
-//       userId: "101",
-//       title: "Buy groceries",
-//       description: "Buy milk, bread, and eggs from the supermarket.",
-//       completed: false,
-//       created_at: new Date("2024-01-01T09:00:00Z"),
-//       updated_at: new Date("2024-01-01T09:00:00Z"),
-//     },
-//     {
-//       id: "2",
-//       userId: "102",
-//       title: "Finish project report",
-//       description:
-//         "Complete the final report for the project and submit it to the manager.",
-//       completed: true,
-//       created_at: new Date("2024-01-02T10:30:00Z"),
-//       updated_at: new Date("2024-01-03T14:00:00Z"),
-//     },
-//     {
-//       id: "3",
-//       userId: "103",
-//       title: "Plan vacation",
-//       description:
-//         "Plan the itinerary and book flights and hotels for the vacation.",
-//       completed: false,
-//       created_at: new Date("2024-01-04T12:00:00Z"),
-//       updated_at: new Date("2024-01-04T12:00:00Z"),
-//     },
-//     {
-//       id: "4",
-//       userId: "104",
-//       title: "Read book",
-//       description: "Read the book 'The Great Gatsby' by F. Scott Fitzgerald.",
-//       completed: false,
-//       created_at: new Date("2024-01-05T15:45:00Z"),
-//       updated_at: new Date("2024-01-05T15:45:00Z"),
-//     },
-//     {
-//       id: "5",
-//       userId: "105",
-//       title: "Exercise",
-//       description: "Do a 30-minute workout session.",
-//       completed: true,
-//       created_at: new Date("2024-01-06T07:00:00Z"),
-//       updated_at: new Date("2024-01-06T08:00:00Z"),
-//     },
-//   ];
-//   /**Fetch Todos test case */
-//   describe("fetchTodos", () => {
-//     let todoModelFetchTodosStub: Sinon.SinonStub;
-//     beforeEach(() => {
-//       todoModelFetchTodosStub = Sinon.stub(TodoModel, "fetchTodos");
-//     });
-//     afterEach(() => {
-//       todoModelFetchTodosStub.restore();
-//     });
-//     it("Should return all todo if user is admin", () => {
-//       todoModelFetchTodosStub.returns(todos);
-//       /**Assuming Admin id = 0 */
-//       const response = TodoService.fetchTodos("0", 0);
-//       expect(response).toStrictEqual(todos);
-//       expect(todoModelFetchTodosStub.callCount).toBe(1);
-//       expect(todoModelFetchTodosStub.getCall(0).args).toStrictEqual(["0", 0]);
-//     });
+describe("Todo Service Test Suite", () => {
+  const todo: ITodo = {
+    id: "1",
+    title: "Test Todo",
+    description: "Test Description",
+    completed: false,
+    userId: "1",
+  };
 
-//     it("Should return todos based on user id", () => {
-//       const usersTodos = todos.filter((todo) => todo.userId === "103");
-//       todoModelFetchTodosStub.returns(usersTodos);
-//       const response = TodoService.fetchTodos("103", 1);
-//       expect(response).toStrictEqual(usersTodos);
-//       expect(todoModelFetchTodosStub.callCount).toBe(1);
-//       expect(todoModelFetchTodosStub.getCall(0).args).toStrictEqual(["103", 1]);
-//     });
+  const userId = 1;
 
-//     it("Should throw error if no todos found", () => {
-//       todoModelFetchTodosStub.returns([]);
-//       expect(() => TodoService.fetchTodos("150", 1)).toThrow(
-//         new NotFoundError("No todos found")
-//       );
-//       expect(todoModelFetchTodosStub.callCount).toBe(1);
-//       expect(todoModelFetchTodosStub.getCall(0).args).toStrictEqual(["150", 1]);
-//     });
-//   });
-//   /**Fetch todos by id test case */
-//   describe("fetchTodoById", () => {
-//     let todoModelFetchTodoByIdStub: Sinon.SinonStub;
-//     beforeEach(() => {
-//       todoModelFetchTodoByIdStub = Sinon.stub(TodoModel, "fetchTodoById");
-//     });
+  /** Add Todo Test Cases */
+  describe("addTodo", () => {
+    let todoModelCreateStub: Sinon.SinonStub;
+    beforeEach(() => {
+      todoModelCreateStub = Sinon.stub(TodoModel.TodoModel, "create");
+    });
+    afterEach(() => {
+      todoModelCreateStub.restore();
+    });
 
-//     afterEach(() => {
-//       todoModelFetchTodoByIdStub.restore();
-//     });
-//     it("Should return todo if found", () => {
-//       const todo = {
-//         id: "2",
-//         userId: "102",
-//         title: "Finish project report",
-//         description:
-//           "Complete the final report for the project and submit it to the manager.",
-//         completed: true,
-//         created_at: new Date("2024-01-02T10:30:00Z"),
-//         updated_at: new Date("2024-01-03T14:00:00Z"),
-//       };
-//       todoModelFetchTodoByIdStub.returns(todo);
-//       const response = TodoService.fetchTodoById("2", 1, "102");
-//       expect(response).toStrictEqual(todo);
-//       expect(todoModelFetchTodoByIdStub.callCount).toBe(1);
-//       expect(todoModelFetchTodoByIdStub.getCall(0).args).toStrictEqual([
-//         "2",
-//         1,
-//         "102",
-//       ]);
-//     });
-//     it("Should throw error if todo is not found", () => {
-//       todoModelFetchTodoByIdStub.returns(null);
-//       expect(() => TodoService.fetchTodoById("20", 1, "102")).toThrow(
-//         new NotFoundError("Todo with id 20 does not exist")
-//       );
-//       expect(todoModelFetchTodoByIdStub.callCount).toBe(1);
-//       expect(todoModelFetchTodoByIdStub.getCall(0).args).toStrictEqual([
-//         "20",
-//         1,
-//         "102",
-//       ]);
-//     });
-//   });
-//   /**Add todo test case */
-//   describe("addTodo", () => {
-//     let todoModelAddTdoStub: Sinon.SinonStub;
-//     beforeEach(() => {
-//       todoModelAddTdoStub = Sinon.stub(TodoModel, "addTodo");
-//     });
-//     afterEach(() => {
-//       todoModelAddTdoStub.restore();
-//     });
-//     it("Should add todo", () => {
-//       const todo = {
-//         userId: "102",
-//         title: "Finish project report",
-//         description:
-//           "Complete the final report for the project and submit it to the manager.",
-//       };
+    it("Should add a todo", async () => {
+      todoModelCreateStub.resolves();
+      await TodoService.addTodo(todo, userId);
+      expect(todoModelCreateStub.callCount).toBe(1);
+      expect(todoModelCreateStub.getCall(0).args).toStrictEqual([todo, userId]);
+    });
 
-//       todoModelAddTdoStub.returns(todo);
-//       TodoService.addTodo(todo, 1);
-//       expect(todoModelAddTdoStub.callCount).toBe(1);
-//       expect(todoModelAddTdoStub.getCall(0).args).toStrictEqual([todo]);
-//     });
-//     it("Should throw error if user is admin", () => {
-//       const todo = {
-//         userId: "102",
-//         title: "Finish project report",
-//         description:
-//           "Complete the final report for the project and submit it to the manager.",
-//       };
-//       expect(() => TodoService.addTodo(todo, 0)).toThrow(
-//         new ForbiddenError("Forbidden access")
-//       );
-//     });
-//   });
-//   /**Delete todo by id test case */
-//   describe("deleteTodoById", () => {
-//     let todomModelDeleteTodoByIdStub: Sinon.SinonStub;
-//     let todosStub: Sinon.SinonStub;
-//     beforeEach(() => {
-//       todomModelDeleteTodoByIdStub = Sinon.stub(TodoModel, "deleteTodoById");
-//       todosStub = Sinon.stub(realTodos, "find");
-//     });
-//     afterEach(() => {
-//       todomModelDeleteTodoByIdStub.restore();
-//       todosStub.restore();
-//     });
-//     it("Should return success if todo is deleted", () => {
-//       const todo = {
-//         userId: "102",
-//         title: "Finish project report",
-//         description:
-//           "Complete the final report for the project and submit it to the manager.",
-//       };
-//       todomModelDeleteTodoByIdStub.returns("success");
-//       todosStub.returns(todo);
-//       const response = TodoService.deleteTodoById("2", "102");
-//       expect(response).toBe("success");
-//     });
-//     it("Should throw error if todo is not found", () => {
-//       todosStub.returns(null);
-//       expect(() => TodoService.deleteTodoById("2", "102")).toThrow(
-//         new NotFoundError("Todo with id 2 does not exist")
-//       );
-//     });
-//   });
-//   /**Update todo test case */
-//   describe("updateTodo", () => {
-//     let todoModelUpdateTodStub: Sinon.SinonStub;
-//     let todosStub: Sinon.SinonStub;
-//     beforeEach(() => {
-//       todoModelUpdateTodStub = Sinon.stub(TodoModel, "updateTodo");
-//       todosStub = Sinon.stub(realTodos, "find");
-//     });
-//     afterEach(() => {
-//       todoModelUpdateTodStub.restore();
-//       todosStub.restore();
-//     });
-//     it("Should success if todo is updated", () => {
-//       const todo = {
-//         userId: "102",
-//         title: "Finish project report",
-//         description:
-//           "Complete the final report for the project and submit it to the manager.",
-//       };
-//       todosStub.returns(todo);
-//       todoModelUpdateTodStub.returns("success");
-//       const response = TodoService.updateTodo("2", todo);
-//       expect(response).toBe("success");
-//     });
-//     it("Should throw error if todo is not found", () => {
-//       todosStub.returns(null);
-//       expect(() => TodoService.updateTodo("2", [{}])).toThrow(
-//         new NotFoundError("Todo with id 2 does not exist")
-//       );
-//     });
-//   });
-//   /**Finish task test case */
-//   describe("finishTask", () => {
-//     let todoModelFinishTask: Sinon.SinonStub;
-//     let todosStub: Sinon.SinonStub;
-//     beforeEach(() => {
-//       todoModelFinishTask = Sinon.stub(TodoModel, "finishTask");
-//       todosStub = Sinon.stub(realTodos, "find");
-//     });
-//     afterEach(() => {
-//       todoModelFinishTask.restore();
-//       todosStub.restore();
-//     });
-//     it("Should return success if todo is marked as done", () => {
-//       const todo = {
-//         userId: "102",
-//         title: "Finish project report",
-//         description:
-//           "Complete the final report for the project and submit it to the manager.",
-//       };
-//       todosStub.returns(todo);
-//       todoModelFinishTask.returns("success");
-//       const response = TodoService.finishTask("2");
-//       expect(response).toBe("success");
-//     });
-//     it("Should throw error if todo is not found", () => {
-//       todosStub.returns(null);
-//       expect(() => TodoService.updateTodo("2", [{}])).toThrow(
-//         new NotFoundError("Todo with id 2 does not exist")
-//       );
-//     });
-//   });
-//   /**Fetch finished task test case */
-//   describe("fetchFinishedTask", ()=>{
-//     let todoModelFetchFinishedTask: Sinon.SinonStub;
-//     beforeEach(()=>{
-//         todoModelFetchFinishedTask = Sinon.stub(TodoModel, "fetchFinishedTask");
-//     });
-//     afterEach(()=>{
-//         todoModelFetchFinishedTask.restore();
-//     })
+    it("Should throw an error if todo is not added", async () => {
+      todoModelCreateStub.rejects(new Error("Database error"));
+      expect(
+        async () => await TodoService.addTodo(todo, userId)
+      ).rejects.toThrow(
+        new ApiError(
+          HttpStatusCode.INTERNAL_SERVER_ERROR,
+          "Todo not added",
+          "DATABASE ERROR"
+        )
+      );
+    });
+  });
 
-//     it("Should return mark as done task if found", ()=>{
-//         const todo = [{
-//             userId: "102",
-//             title: "Finish project report",
-//             description:
-//               "Complete the final report for the project and submit it to the manager.",
-//             completed: true
-//           }];
-//         todoModelFetchFinishedTask.returns(todo);
-//         const response = TodoService.fetchFinishedTask("102");
-//         expect(response).toStrictEqual(todo);
-//     })
-//     it("Should throw error if finished task not found", ()=>{
-//         todoModelFetchFinishedTask.returns([]);
-//         expect(()=>TodoService.fetchFinishedTask("120")).toThrow(
-//             new NotFoundError("No finished todos.")
-//         );
-//     })
-//   })
-// });
+  /** Get Todo By ID Test Cases */
+  describe("getTodoById", () => {
+    let todoModelGetTodoByIdStub: Sinon.SinonStub;
+    beforeEach(() => {
+      todoModelGetTodoByIdStub = Sinon.stub(TodoModel.TodoModel, "getTodoById");
+    });
+    afterEach(() => {
+      todoModelGetTodoByIdStub.restore();
+    });
+
+    it("Should return todo if found", async () => {
+      todoModelGetTodoByIdStub.resolves(todo);
+      const response = await TodoService.getTodoById("1", "1");
+      expect(response).toStrictEqual(todo);
+      expect(todoModelGetTodoByIdStub.callCount).toBe(1);
+      expect(todoModelGetTodoByIdStub.getCall(0).args).toStrictEqual(["1", "1"]);
+    });
+
+    it("Should throw an error if todo is not found", async () => {
+      todoModelGetTodoByIdStub.resolves(null);
+      expect(
+        async () => await TodoService.getTodoById("1", "1")
+      ).rejects.toThrow(
+        new ApiError(
+          HttpStatusCode.NOT_FOUND,
+          `Todo with id 1 not found`,
+          "NOT FOUND ERROR"
+        )
+      );
+    });
+  });
+
+  /** Update Todo Test Cases */
+  describe("updateTodo", () => {
+    let todoModelUpdateStub: Sinon.SinonStub;
+    let todoModelGetTodoByIdStub: Sinon.SinonStub;
+    beforeEach(() => {
+      todoModelUpdateStub = Sinon.stub(TodoModel.TodoModel, "update");
+      todoModelGetTodoByIdStub = Sinon.stub(TodoModel.TodoModel, "getTodoById");
+    });
+    afterEach(() => {
+      todoModelUpdateStub.restore();
+      todoModelGetTodoByIdStub.restore();
+    });
+
+    it("Should update todo if found", async () => {
+      todoModelGetTodoByIdStub.resolves(todo);
+      todoModelUpdateStub.resolves();
+      await TodoService.updateTodo(todo, "1", "1");
+      expect(todoModelUpdateStub.callCount).toBe(1);
+      expect(todoModelUpdateStub.getCall(0).args).toStrictEqual([todo, "1", "1"]);
+    });
+
+    it("Should throw an error if todo is not found", async () => {
+      todoModelGetTodoByIdStub.resolves(null);
+      expect(
+        async () => await TodoService.updateTodo(todo, "1", "1")
+      ).rejects.toThrow(
+        new ApiError(
+          HttpStatusCode.NOT_FOUND,
+          `Todo with id 1 not found`,
+          "NOT FOUND ERROR"
+        )
+      );
+    });
+  });
+
+  /** Get Todos Test Cases */
+  describe("getTodos", () => {
+    let todoModelGetTodosStub: Sinon.SinonStub;
+    beforeEach(() => {
+      todoModelGetTodosStub = Sinon.stub(TodoModel.TodoModel, "getTodos");
+    });
+    afterEach(() => {
+      todoModelGetTodosStub.restore();
+    });
+
+    it("Should return todos if found", async () => {
+      const todos = [todo];
+      const filter: GetTodoQuery = { size: 10, page: 1 };
+      todoModelGetTodosStub.resolves(todos);
+      const response = await TodoService.getTodos(filter, "1");
+      expect(response).toBe(todos);
+      expect(todoModelGetTodosStub.callCount).toBe(1);
+    });
+
+    it("Should throw an error if todos are not found", async () => {
+      const todos: ITodo[] = [];
+      const filter: GetTodoQuery = { size: 10, page: 1 };
+      todoModelGetTodosStub.resolves(todos);
+      expect(
+        async () => await TodoService.getTodos(filter, "1")
+      ).rejects.toThrow(
+        new ApiError(HttpStatusCode.NOT_FOUND, `Todos not found`, "NOT FOUND ERROR")
+      );
+    });
+  });
+
+  /** Delete Todo By ID Test Cases */
+  describe("deleteTodoById", () => {
+    let todoModelDeleteTodoByIdStub: Sinon.SinonStub;
+    let todoModelGetTodoByIdStub: Sinon.SinonStub;
+    beforeEach(() => {
+      todoModelDeleteTodoByIdStub = Sinon.stub(TodoModel.TodoModel, "deleteTodoById");
+      todoModelGetTodoByIdStub = Sinon.stub(TodoModel.TodoModel, "getTodoById");
+    });
+    afterEach(() => {
+      todoModelDeleteTodoByIdStub.restore();
+      todoModelGetTodoByIdStub.restore();
+    });
+
+    it("Should delete todo if found", async () => {
+      todoModelGetTodoByIdStub.resolves(todo);
+      todoModelDeleteTodoByIdStub.resolves();
+      await TodoService.deleteTodoById("1", "1");
+      expect(todoModelDeleteTodoByIdStub.callCount).toBe(1);
+      expect(todoModelDeleteTodoByIdStub.getCall(0).args).toStrictEqual(["1", "1"]);
+    });
+
+    it("Should throw an error if todo is not found", async () => {
+      todoModelGetTodoByIdStub.resolves(null);
+      expect(
+        async () => await TodoService.deleteTodoById("1", "1")
+      ).rejects.toThrow(
+        new ApiError(
+          HttpStatusCode.NOT_FOUND,
+          `Todo with id 1 not found`,
+          "NOT FOUND ERROR"
+        )
+      );
+    });
+  });
+
+  /** Mark Todo As Done Test Cases */
+  describe("markTodoAsDone", () => {
+    let todoModelMarkTodoAsDoneStub: Sinon.SinonStub;
+    let todoModelGetTodoByIdStub: Sinon.SinonStub;
+    beforeEach(() => {
+      todoModelMarkTodoAsDoneStub = Sinon.stub(TodoModel.TodoModel, "markTodoAsDone");
+      todoModelGetTodoByIdStub = Sinon.stub(TodoModel.TodoModel, "getTodoById");
+    });
+    afterEach(() => {
+      todoModelMarkTodoAsDoneStub.restore();
+      todoModelGetTodoByIdStub.restore();
+    });
+
+    it("Should mark todo as done if found", async () => {
+      todoModelGetTodoByIdStub.resolves(todo);
+      todoModelMarkTodoAsDoneStub.resolves();
+      await TodoService.markTodoAsDone("1", "1");
+      expect(todoModelMarkTodoAsDoneStub.callCount).toBe(1);
+      expect(todoModelMarkTodoAsDoneStub.getCall(0).args).toStrictEqual(["1", "1"]);
+    });
+
+    it("Should throw an error if todo is not found", async () => {
+      todoModelGetTodoByIdStub.resolves(null);
+      expect(
+        async () => await TodoService.markTodoAsDone("1", "1")
+      ).rejects.toThrow(
+        new ApiError(
+          HttpStatusCode.NOT_FOUND,
+          `Todo with id 1 not found`,
+          "NOT FOUND ERROR"
+        )
+      );
+    });
+  });
+
+  /** Get Done Todos Test Cases */
+  describe("getDoneTodos", () => {
+    let todoModelGetDoneTodosStub: Sinon.SinonStub;
+    beforeEach(() => {
+      todoModelGetDoneTodosStub = Sinon.stub(TodoModel.TodoModel, "getDoneTodos");
+    });
+    afterEach(() => {
+      todoModelGetDoneTodosStub.restore();
+    });
+
+    it("Should return done todos if found", async () => {
+      const doneTodos = [todo];
+      todoModelGetDoneTodosStub.resolves(doneTodos);
+      const response = await TodoService.getDoneTodos("1");
+      expect(response).toBe(doneTodos);
+      expect(todoModelGetDoneTodosStub.callCount).toBe(1);
+      expect(todoModelGetDoneTodosStub.getCall(0).args).toStrictEqual(["1"]);
+    });
+
+    it("Should throw an error if done todos are not found", async () => {
+      const doneTodos: ITodo[] = [];
+      todoModelGetDoneTodosStub.resolves(doneTodos);
+      expect(
+        async () => await TodoService.getDoneTodos("1")
+      ).rejects.toThrow(
+        new ApiError(
+          HttpStatusCode.NOT_FOUND,
+          `Done todos not found`,
+          "NOT FOUND ERROR"
+        )
+      );
+    });
+  });
+});

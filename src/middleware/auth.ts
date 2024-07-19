@@ -18,7 +18,6 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
     const user = verify(token[1], config.jwt.secret!) as IUser;
     let permissions = await getPermissions(user.id);
     permissions = permissions.map((permission) => permission.permissionName);
-    console.log(permissions);
     req.body.permissions = permissions;
     req.body.userId = user.id;
     next();
