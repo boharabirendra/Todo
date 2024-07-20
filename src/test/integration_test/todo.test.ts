@@ -106,11 +106,11 @@ describe("Todo Service Test Suite", () => {
         .set("Authorization", `Bearer ${userAccessToken}`);
       expect(response.status).toBe(200);
     });
-    // it("Should throw error if done todos are none", async () => {
-    //   const response = await request(app)
-    //     .get("/todos/done")
-    //     .set("Authorization", `Bearer ${userAccessToken}`);
-    //   expect(response.status).toBe(404);
-    // });
+    it("Should throw error if done todos are none", async () => {
+      const response = await request(app)
+        .get("/todos/done")
+        .set("Authorization", `Bearer ${userAccessToken}`);
+      expect(response.status).toBe(404);
+    });
   });
 });
